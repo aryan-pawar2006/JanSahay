@@ -1,0 +1,278 @@
+# ADDITIONAL FEATURE: SMART DOCUMENT GUIDANCE & GOVERNMENT SCHEME DISCOVERY
+
+Extend the existing JanSahay AI project with a complete Smart Document Guidance System.
+
+Keep the existing technology stack:
+- Frontend: React + JavaScript + Vite + Tailwind CSS.
+- Backend: Node.js + Express.js.
+- Database: MongoDB + Mongoose.
+- AI: Optional LLM API with a transparent, database-grounded fallback.
+
+Do not rebuild the application from scratch. Integrate this feature into the existing architecture and ensure that it works with the existing profile, recommendation, eligibility, scheme, and document-checklist modules.
+
+## 1. PERSONALIZED CITIZEN PROFILE
+
+Collect only the information genuinely needed for relevant scheme matching.
+
+Depending on the selected category, the profile may include:
+- Age or date of birth, when required by a scheme.
+- State and district.
+- Occupation.
+- Education level, course and current year.
+- Approximate annual family income.
+- Student, farmer, business owner or employment status.
+- Relevant scheme-specific eligibility information.
+
+Use progressive questions: ask additional questions only when relevant to a potential scheme.
+
+Never require unnecessary sensitive information such as Aadhaar numbers, bank account details or government-portal passwords. Do not store such information merely to make the recommendation system appear more advanced.
+
+## 2. CURRENT GOVERNMENT SCHEME DISCOVERY
+
+Create a scheme discovery and recommendation system that uses a maintained database of government scheme information.
+
+Each scheme record should include, where available:
+- Scheme name and description.
+- Target beneficiaries.
+- Occupation and category.
+- Age conditions.
+- Education conditions.
+- Income conditions.
+- State or geographical restrictions.
+- Other published eligibility rules.
+- Benefits.
+- Required documents.
+- Document issuing authority.
+- Official application instructions.
+- Official source URL.
+- Last-verified date.
+- Verification status.
+- Publication status.
+
+Provide recommendations based on the user's profile and the scheme's structured eligibility rules.
+
+Display:
+- Strong Match.
+- Potential Match.
+- More Information Required.
+- Not a Match.
+
+For every result, explain why the scheme was recommended, which conditions matched, which conditions failed, and which conditions remain unknown.
+
+IMPORTANT: Do not claim to have current government information unless the relevant information has actually been retrieved or verified. Clearly distinguish stored scheme data, live-retrieved information and demonstration records.
+
+Where live government-data integration is not available, use a clearly labelled database of curated scheme records with official source links and verification dates. Do not fabricate real-time updates, application deadlines or eligibility conditions.
+
+Do not assume that a generic search engine or an AI-generated answer is an authoritative government data source.
+
+## 3. AUTOMATIC MISSING-DOCUMENT DETECTION
+
+After the user receives scheme recommendations, automatically compare the documents required by each recommended scheme with the user's document checklist.
+
+For each scheme, display:
+- Required documents.
+- Documents marked Ready.
+- Documents marked Missing.
+- Documents whose status is Unknown or Needs Verification.
+- Overall document preparation progress.
+
+Do not assume that a document is missing merely because the user has not entered it in the application. Initially classify an unrecorded document as Unknown or Not Yet Checked.
+
+Allow the user to mark a document as:
+- Already Available.
+- Not Available.
+- Needs Verification.
+
+When a required document is unavailable, automatically show a button labelled "How to Get This Document".
+
+## 4. SMART DOCUMENT ACQUISITION GUIDES
+
+Build a Document Guidance module that explains how citizens can obtain missing documents.
+
+Examples of document types may include:
+- Income certificate.
+- Caste certificate.
+- Domicile or residence certificate.
+- Non-creamy layer certificate.
+- Disability certificate.
+- Educational certificates or bonafide certificate.
+- Land-related records.
+- Business or MSME-related registration documents.
+
+These are examples only. Include a document type only when it is relevant to the selected scheme or profile.
+
+Create a MongoDB model called DocumentGuide with fields such as:
+
+- documentType
+- title
+- simpleDescription
+- applicableState
+- issuingAuthority
+- eligibilityOrPrerequisites
+- requiredSupportingDocuments
+- applicationSteps
+- applicationMethod
+- officialApplicationUrl
+- officialInformationUrl
+- possibleFees, if verified
+- expectedProcessingTime, if verified
+- lastVerifiedAt
+- verificationStatus
+- additionalNotes
+
+Each guide must explain:
+
+1. What is this document?
+2. Why might the user need it?
+3. Which authority normally issues it?
+4. What supporting documents are required?
+5. Where should the user apply?
+6. What are the steps to apply?
+7. What should the user do after submitting the application?
+8. Where can the user find the official instructions?
+9. What details must be checked before applying?
+
+Use short sentences, simple English and clear numbered steps.
+
+For example, the guide for an income certificate should explain the relevant official application route, supporting evidence and submission process based on verified instructions applicable to the user's state.
+
+Do not invent a universal application process. Procedures, portals, fees, authorities and processing times may vary by state, district, document type and issuing authority.
+
+When verified instructions are unavailable, explicitly display: "Detailed instructions have not yet been verified. Please consult the issuing authority through the official information link."
+
+Do not guarantee approval or issuance.
+
+## 5. INTEGRATED DOCUMENT GUIDANCE EXPERIENCE
+
+When a user opens a recommended scheme, show three sections:
+
+A. Scheme Eligibility
+- Why the scheme matched.
+- Which eligibility conditions were satisfied.
+- Which conditions need confirmation.
+- Official scheme source.
+
+B. Required Documents
+- Complete required-document list.
+- Current checklist status.
+- Preparation progress.
+- Warnings for missing or unverified documents.
+
+C. How to Obtain Missing Documents
+- One guidance card for each missing document.
+- A simple explanation.
+- Step-by-step application instructions.
+- Supporting-document checklist.
+- Issuing authority.
+- Official application and information links.
+- Last-verified date.
+
+Example user experience:
+
+The user is a student from Maharashtra. A recommended scheme requires a document that the student does not have.
+
+The application should:
+1. Identify the missing document from the scheme's requirements.
+2. Explain why the document is listed.
+3. Open the appropriate document guide for the user's state.
+4. Show the required supporting documents.
+5. Explain the application process in simple language.
+6. Link to the verified official application or information page.
+7. Allow the user to mark the document as Available once obtained.
+8. Update the checklist and document preparation progress.
+
+This workflow must be connected to real backend APIs and MongoDB records. Do not implement it as static UI text alone.
+
+## 6. SIMPLE-LANGUAGE AI EXPLANATIONS
+
+Extend the existing AI assistant to answer questions such as:
+- Why is this scheme recommended for me?
+- Why is this document required?
+- How can I obtain this document in Maharashtra?
+- What supporting documents should I prepare?
+- Which authority should I contact?
+- What should I do if I do not have one of the required documents?
+- Can you explain these instructions in simple Marathi or Hindi?
+
+The assistant must use the selected scheme and relevant DocumentGuide records as its context.
+
+Prioritise verified stored information and official-source content. If a question cannot be answered reliably from the available data, say that the information needs verification and direct the user to the relevant official source.
+
+Do not let the AI invent official links, fees, deadlines, document requirements or procedures.
+
+If an LLM API is not configured, provide a deterministic demo mode that displays stored document guidance without pretending that a live AI service is running.
+
+## 7. BACKEND API REQUIREMENTS
+
+Add suitable REST endpoints, including:
+
+- GET /api/documents/guides
+- GET /api/documents/guides/:id
+- GET /api/documents/guides/by-type/:documentType
+- GET /api/schemes/:id/documents
+- GET /api/schemes/:id/document-readiness
+- PUT /api/checklists/:schemeId
+
+Add admin-only endpoints to create, update, verify, publish and archive document guides.
+
+Filter document guidance by document type, applicable state and verification status.
+
+Validate every request. Enforce authentication and authorization where needed. Ensure users can only access and modify their own private checklist data.
+
+Use appropriate indexes and prevent duplicate document guides for the same document type and applicable jurisdiction where appropriate.
+
+## 8. ADMIN DOCUMENT KNOWLEDGE BASE
+
+Extend the admin dashboard so administrators can:
+- Add document guides.
+- Edit application steps.
+- Add supporting-document requirements.
+- Select the applicable state.
+- Enter official application and information URLs.
+- Record the last verification date.
+- Mark a guide as Verified, Unverified or Outdated.
+- Publish or archive guides.
+- Review schemes that reference the guide.
+
+Only label information Verified after it has actually been checked against an appropriate official source.
+
+When a guide becomes Outdated, show a warning and avoid presenting its instructions as confirmed current procedures.
+
+## 9. DOCUMENT PREPARATION DASHBOARD
+
+Create a dashboard section called "My Document Preparation".
+
+It should display:
+- Missing documents across recommended schemes.
+- Documents already marked Available.
+- Documents awaiting verification.
+- Relevant schemes that depend on each document.
+- A button to open the document acquisition guide.
+- A checklist of the next preparation actions.
+
+Where one document is required by multiple schemes, avoid unnecessarily duplicating its preparation status for the same user. Reuse a stable document identifier and explain which schemes reference it.
+
+Clearly distinguish personal checklist progress from official document verification.
+
+## 10. ACCEPTANCE CRITERIA
+
+The implementation is complete only when the following workflow works:
+
+1. The user registers or logs in.
+2. The user enters their profile information.
+3. The backend evaluates the profile against available scheme rules.
+4. The application displays relevant schemes with explanations.
+5. The user opens a scheme and reviews its required documents.
+6. The application identifies documents marked Missing or not yet checked.
+7. The user opens How to Get This Document.
+8. The application displays the corresponding jurisdiction-appropriate guidance and supporting-document checklist.
+9. The user can access the official information link.
+10. The user updates their document checklist.
+11. The dashboard reflects the updated preparation status.
+12. The AI assistant explains the stored guidance without inventing facts.
+13. An administrator can update and maintain document guides.
+14. The application clearly identifies outdated, unverified or demonstration data.
+
+Write complete working code, update the database models, implement the APIs, connect the React components, and update the README and test cases.
+
+Do not break the existing JanSahay AI features. Keep the implementation understandable for a student using React, JavaScript, Node.js, Express.js and MongoDB.
