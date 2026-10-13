@@ -1,6 +1,6 @@
-# [Project name]
+# JanSahay AI
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Citizen guidance for government-scheme discovery, eligibility explanations, and document preparation.
 
 ## Run & Operate
 
@@ -22,23 +22,34 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/jansahay` — React/Vite citizen, guide, assistant, and admin UI
+- `artifacts/api-server` — Express endpoints and Clerk middleware
+- `lib/api-spec/openapi.yaml` — source of truth for generated client/server validation
+- `lib/db/src/schema` — PostgreSQL/Drizzle models
+- `README.md` — operating notes, data provenance, and admin access
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Scheme matching is deterministic and reports matched, failed, and unknown conditions separately.
+- New checklist entries default to `unknown`; each citizen's status is keyed by canonical document type and reused across schemes.
+- Demonstration records are never presented as verified government guidance.
+- The assistant uses stored scheme and guide records only; it does not claim live retrieval or an active LLM.
+- Admin guide edits invalidate prior verification; only the explicit verification action records a review source and date.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Citizens can save a minimal profile, compare it with stored scheme conditions, track preparation progress, and open relevant document guides. Administrators maintain guide content and verification status.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Do not collect Aadhaar numbers, bank account details, or government-portal passwords for scheme matching.
+- Make unverified, outdated, and demonstration records explicit; never invent deadlines, fees, eligibility rules, or application procedures.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Regenerate API client and Zod schemas after every OpenAPI change.
+- The demo guide records have no verified application steps or links; keep the unverified-instructions fallback visible.
+- Admin API access requires an admin role in Clerk session metadata or a configured server-side allowlist.
 
 ## Pointers
 
