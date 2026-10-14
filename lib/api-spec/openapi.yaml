@@ -427,7 +427,7 @@ components:
         - type: object
           required: [updatedAt]
           properties:
-            updatedAt: { type: string, format: date-time }
+            updatedAt: { type: ["string", "null"], format: date-time }
     SchemeDocument:
       type: object
       required: [documentType, title, reason]
@@ -457,7 +457,7 @@ components:
           type: array
           items: { $ref: "#/components/schemas/SchemeDocument" }
         applicationInstructions: { type: ["string", "null"] }
-        officialSourceUrl: { type: string, format: uri }
+        officialSourceUrl: { type: ["string", "null"], format: uri }
         lastVerifiedAt: { type: ["string", "null"], format: date-time }
         verificationStatus: { $ref: "#/components/schemas/VerificationStatus" }
         publicationStatus: { $ref: "#/components/schemas/PublicationStatus" }

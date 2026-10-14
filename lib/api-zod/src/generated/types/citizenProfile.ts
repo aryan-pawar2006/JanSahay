@@ -7,6 +7,7 @@
  */
 import type { CitizenProfileInput } from './citizenProfileInput';
 
-export type CitizenProfile = CitizenProfileInput & {
-  updatedAt: Date;
-};
+export type CitizenProfile = CitizenProfileInput & ({
+  /** @nullable */
+  updatedAt: Date | null;
+});

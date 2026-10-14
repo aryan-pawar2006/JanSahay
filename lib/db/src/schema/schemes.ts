@@ -25,7 +25,7 @@ export const schemesTable = pgTable("jansahay_schemes", {
   benefits: jsonb("benefits").$type<string[]>().notNull().default([]),
   requiredDocuments: jsonb("required_documents").$type<SchemeDocumentRecord[]>().notNull().default([]),
   applicationInstructions: text("application_instructions"),
-  officialSourceUrl: text("official_source_url").notNull(),
+  officialSourceUrl: text("official_source_url"),
   lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
   verificationStatus: text("verification_status").notNull().default("unverified"),
   publicationStatus: text("publication_status").notNull().default("demonstration"),

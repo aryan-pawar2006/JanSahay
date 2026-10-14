@@ -1,7 +1,23 @@
+import { eq } from "drizzle-orm";
 import { db } from "@workspace/db";
 import { documentGuidesTable, schemesTable } from "@workspace/db";
 
 export async function seedDemoData(): Promise<void> {
+  const [existingDemo] = await db
+    .select({ id: schemesTable.id, sourceKind: schemesTable.sourceKind })
+    .from(schemesTable)
+    .where(eq(schemesTable.id, "demo-student-support"))
+    .limit(1);
+  if (existingDemo) {
+    if (existingDemo.sourceKind === "demonstration") {
+      await db
+        .update(schemesTable)
+        .set({ educationConditions: [], officialSourceUrl: null })
+        .where(eq(schemesTable.id, existingDemo.id));
+    }
+    return;
+  }
+
   const [existingSchemes] = await db
     .select({ id: schemesTable.id })
     .from(schemesTable)
@@ -33,7 +49,7 @@ export async function seedDemoData(): Promise<void> {
     minimumAge: 16,
     maximumAge: 30,
     maximumAnnualIncome: 250000,
-    educationConditions: ["student"],
+    educationConditions: [],
     eligibilityRules: [
       "DEMO RULE ONLY: student profile",
       "DEMO RULE ONLY: age from 16 to 30",
@@ -42,7 +58,7 @@ export async function seedDemoData(): Promise<void> {
     benefits: ["No benefit information is claimed; this is demonstration data."],
     requiredDocuments: [incomeDocument, studentDocument],
     applicationInstructions: null,
-    officialSourceUrl: "https://scholarships.gov.in/",
+    officialSourceUrl: null,
     lastVerifiedAt: null,
     verificationStatus: "unverified",
     publicationStatus: "demonstration",

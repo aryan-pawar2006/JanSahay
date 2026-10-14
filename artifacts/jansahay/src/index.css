@@ -131,6 +131,14 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 .error-panel button { margin-top: 3px; }
 .inline-warning { padding: 12px 15px; margin: 14px 0; border: 1px solid #e5d3a9; border-radius: 12px; background: #f8f1df; color: #74612e; font-size: .82rem; }
 .inline-warning button { color: #286454; font-weight: 700; text-decoration: underline; margin-left: 5px; }
+.guide-warning { display:flex; align-items:flex-start; gap:10px; line-height:1.5; }
+.guide-warning > svg { flex:0 0 auto; margin-top:2px; }
+.guide-warning b { display:block; margin-bottom:3px; }
+.guide-warning p { margin:0; }
+.guide-warning a { color:#286454; font-weight:700; text-decoration:underline; }
+.guest-document-row { grid-template-columns:minmax(0,1fr) auto; }
+.sidebar-auth-links { display:grid; gap:8px; }
+.sidebar-auth-links .button { width:100%; min-height:38px; justify-content:center; }
 .notice-band { margin: 0 0 23px; border: 1px solid #e4d5b5; background: #f8f2e5; color: #7a6736; border-radius: 13px; padding: 12px 15px; display: flex; align-items: center; gap: 11px; font-size: .79rem; }
 .notice-band p { margin: 0; line-height: 1.5; flex: 1; }.notice-band b { color: #5e5336; }
 .notice-band.compact { margin: -5px 0 18px; }

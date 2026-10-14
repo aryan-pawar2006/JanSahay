@@ -43,7 +43,7 @@ export const GetProfileResponse = zod.object({
   "employmentStatus": zod.string().nullish(),
   "socialCategory": zod.string().nullish()
 }).and(zod.object({
-  "updatedAt": zod.coerce.date()
+  "updatedAt": zod.coerce.date().nullable()
 }))
 
 
@@ -99,7 +99,7 @@ export const SaveProfileResponse = zod.object({
   "employmentStatus": zod.string().nullish(),
   "socialCategory": zod.string().nullish()
 }).and(zod.object({
-  "updatedAt": zod.coerce.date()
+  "updatedAt": zod.coerce.date().nullable()
 }))
 
 
@@ -132,7 +132,7 @@ export const ListSchemesResponseItem = zod.object({
   "issuingAuthority": zod.string().nullish()
 })),
   "applicationInstructions": zod.string().nullish(),
-  "officialSourceUrl": zod.string().url(),
+  "officialSourceUrl": zod.string().url().nullable(),
   "lastVerifiedAt": zod.coerce.date().nullish(),
   "verificationStatus": zod.enum(['verified', 'unverified', 'outdated']),
   "publicationStatus": zod.enum(['draft', 'published', 'archived', 'demonstration']),
@@ -169,7 +169,7 @@ export const GetSchemeResponse = zod.object({
   "issuingAuthority": zod.string().nullish()
 })),
   "applicationInstructions": zod.string().nullish(),
-  "officialSourceUrl": zod.string().url(),
+  "officialSourceUrl": zod.string().url().nullable(),
   "lastVerifiedAt": zod.coerce.date().nullish(),
   "verificationStatus": zod.enum(['verified', 'unverified', 'outdated']),
   "publicationStatus": zod.enum(['draft', 'published', 'archived', 'demonstration']),
@@ -227,7 +227,7 @@ export const GetRecommendationsResponseItem = zod.object({
   "issuingAuthority": zod.string().nullish()
 })),
   "applicationInstructions": zod.string().nullish(),
-  "officialSourceUrl": zod.string().url(),
+  "officialSourceUrl": zod.string().url().nullable(),
   "lastVerifiedAt": zod.coerce.date().nullish(),
   "verificationStatus": zod.enum(['verified', 'unverified', 'outdated']),
   "publicationStatus": zod.enum(['draft', 'published', 'archived', 'demonstration']),
@@ -627,7 +627,7 @@ export const GetGuideReferencesResponseItem = zod.object({
   "issuingAuthority": zod.string().nullish()
 })),
   "applicationInstructions": zod.string().nullish(),
-  "officialSourceUrl": zod.string().url(),
+  "officialSourceUrl": zod.string().url().nullable(),
   "lastVerifiedAt": zod.coerce.date().nullish(),
   "verificationStatus": zod.enum(['verified', 'unverified', 'outdated']),
   "publicationStatus": zod.enum(['draft', 'published', 'archived', 'demonstration']),

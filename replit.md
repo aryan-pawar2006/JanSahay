@@ -49,7 +49,7 @@ Citizens can save a minimal profile, compare it with stored scheme conditions, t
 
 - Regenerate API client and Zod schemas after every OpenAPI change.
 - The demo guide records have no verified application steps or links; keep the unverified-instructions fallback visible.
-- Admin API access requires an admin role in Clerk session metadata or a configured server-side allowlist.
+- Admin API access requires an admin role in Clerk session metadata or the server and client admin-ID allowlists to match.
 
 ## Pointers
 

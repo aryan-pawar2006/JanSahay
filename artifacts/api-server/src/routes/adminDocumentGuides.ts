@@ -218,6 +218,12 @@ router.post(
       res.status(400).json({ error: "The verification date cannot be in the future." });
       return;
     }
+    if (current.applicationSteps.length === 0) {
+      res.status(409).json({
+        error: "Add and review at least one application step before marking this guide verified.",
+      });
+      return;
+    }
     const userId = getAuth(req).userId!;
     const [guide] = await db
       .update(documentGuidesTable)
@@ -247,6 +253,12 @@ router.post(
     const current = await findGuide(params.data.guideId);
     if (!current) {
       res.status(404).json({ error: "Document guide not found." });
+      return;
+    }
+    if (current.verificationStatus !== "verified") {
+      res.status(409).json({
+        error: "Verify this guide against an official source before publishing it.",
+      });
       return;
     }
     const [guide] = await db

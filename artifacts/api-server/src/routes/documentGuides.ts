@@ -72,7 +72,7 @@ router.get("/documents/guides", async (req, res): Promise<void> => {
         ? guide.verificationStatus === parsed.data.verificationStatus
         : true,
     )
-    .map(guideToApi);
+    .map((guide) => guideToApi(guide));
   res.json(ListDocumentGuidesResponse.parse(visible));
 });
 
@@ -88,7 +88,9 @@ router.get(
       .select()
       .from(documentGuidesTable)
       .where(eq(documentGuidesTable.documentType, params.data.documentType));
-    const visible = records.filter(isPublicGuide).map(guideToApi);
+    const visible = records
+      .filter(isPublicGuide)
+      .map((guide) => guideToApi(guide));
     res.json(GetDocumentGuidesForTypeResponse.parse(visible));
   },
 );
@@ -122,6 +124,11 @@ router.post("/assistant/explain", requireCitizen, async (req, res): Promise<void
   }
 
   const { question, schemeId, documentType, language } = parsed.data;
+  if (!question.trim()) {
+    res.status(400).json({ error: "Enter a question." });
+    return;
+  }
+  const lowerQuestion = question.toLocaleLowerCase("en-IN");
   const userId = getAuth(req).userId!;
   const [profile] = await db
     .select()
@@ -139,8 +146,17 @@ router.post("/assistant/explain", requireCitizen, async (req, res): Promise<void
       .where(eq(schemesTable.id, schemeId))
       .limit(1);
     if (scheme && isPublicScheme(scheme)) {
-      sources.push({ title: scheme.name, url: scheme.officialSourceUrl });
+      if (scheme.officialSourceUrl) {
+        sources.push({ title: scheme.name, url: scheme.officialSourceUrl });
+      }
       parts.push(`Scheme record: ${scheme.name}. ${scheme.description}`);
+      if (/document|paperwork|papers/.test(lowerQuestion)) {
+        parts.push(
+          scheme.requiredDocuments.length
+            ? `Documents in this stored record: ${scheme.requiredDocuments.map((item) => item.title).join(", ")}.`
+            : "No required documents are listed in this stored record.",
+        );
+      }
       if (profile) {
         const evaluation = evaluateScheme(scheme, profileFromDb(profile));
         parts.push(`Current status: ${evaluation.status.replaceAll("_", " ")}.`);
@@ -158,7 +174,11 @@ router.post("/assistant/explain", requireCitizen, async (req, res): Promise<void
       }
       if (scheme.verificationStatus !== "verified" || scheme.sourceKind === "demonstration") {
         needsVerification = true;
-        parts.push("This is unverified or demonstration data. Confirm the conditions with the official source.");
+        parts.push(
+          scheme.officialSourceUrl
+            ? "This is unverified or demonstration data. Confirm the conditions with the stored official source."
+            : "This is unverified or demonstration data, and no official source link is stored. Confirm the rules with the issuing authority.",
+        );
       }
     }
   }
@@ -203,6 +223,24 @@ router.post("/assistant/explain", requireCitizen, async (req, res): Promise<void
     }
   }
 
+  if (/more information|need.*information|unknown|not yet marked/.test(lowerQuestion)) {
+    parts.push(
+      language === "hi"
+        ? "“अधिक जानकारी आवश्यक” का अर्थ है कि कम-से-कम एक संग्रहित शर्त की जाँच नहीं हो सकी। “अज्ञात” का अर्थ न स्वीकृति है, न अस्वीकृति।"
+        : language === "mr"
+          ? "“अधिक माहिती आवश्यक” म्हणजे किमान एका संग्रहित अटीची पडताळणी करता आली नाही. “अज्ञात” म्हणजे मंजुरी किंवा नकार नव्हे."
+          : "“More information needed” means at least one stored condition could not be checked. “Unknown” means neither approval nor rejection.",
+    );
+  }
+
+  if (language !== "en" && parts.length > 0) {
+    parts.unshift(
+      language === "hi"
+        ? "मैं केवल संग्रहित जानकारी का उपयोग करता/करती हूँ। योजना और दस्तावेज़ के विवरण मूल रिकॉर्ड में जैसी भाषा में हैं, वैसे ही दिखाए गए हैं।"
+        : "मी फक्त संग्रहित माहिती वापरतो/वापरते. योजना आणि दस्तऐवजांचे तपशील मूळ नोंदीतील भाषेतच दाखवले आहेत.",
+    );
+  }
+
   if (parts.length === 0) {
     needsVerification = true;
     parts.push(
@@ -214,16 +252,15 @@ router.post("/assistant/explain", requireCitizen, async (req, res): Promise<void
     );
   }
 
-  if (question.trim().length === 0) {
-    res.status(400).json({ error: "Enter a question." });
-    return;
-  }
+  const uniqueSources = Array.from(
+    new Map(sources.map((source) => [source.url, source])).values(),
+  );
   res.json(
     ExplainGuidanceResponse.parse({
       answer: parts.join("\n\n"),
       mode: "stored_guidance_demo",
       needsVerification,
-      sources,
+      sources: uniqueSources,
     }),
   );
 });

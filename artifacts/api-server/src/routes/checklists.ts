@@ -64,7 +64,7 @@ async function getChecklistItems(userId: string, schemeId: string) {
         title: document.title,
         status: (status?.status ?? "unknown") as ChecklistStatus,
         relatedSchemes,
-        updatedAt: status?.updatedAt ?? null,
+        updatedAt: status?.updatedAt?.toISOString() ?? null,
       };
     }),
   };
@@ -236,7 +236,7 @@ router.get(
         title: item.title,
         status: (status?.status ?? "unknown") as ChecklistStatus,
         relatedSchemes: Array.from(item.relatedSchemes),
-        updatedAt: status?.updatedAt ?? null,
+        updatedAt: status?.updatedAt?.toISOString() ?? null,
       };
     });
     const counts = statusCounts(items.map((item) => item.status));

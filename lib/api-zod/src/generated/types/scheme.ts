@@ -31,7 +31,8 @@ export interface Scheme {
   requiredDocuments: SchemeDocument[];
   /** @nullable */
   applicationInstructions?: string | null;
-  officialSourceUrl: string;
+  /** @nullable */
+  officialSourceUrl: string | null;
   /** @nullable */
   lastVerifiedAt?: Date | null;
   verificationStatus: VerificationStatus;

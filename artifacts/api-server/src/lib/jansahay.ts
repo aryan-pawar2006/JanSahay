@@ -41,14 +41,15 @@ export function profileFromDb(profile?: DbCitizenProfile | null): ProfileValues 
 export function profileToApi(profile?: DbCitizenProfile | null) {
   return {
     ...profileFromDb(profile),
-    updatedAt: profile?.updatedAt ?? new Date(),
+    updatedAt: profile?.updatedAt?.toISOString() ?? null,
   };
 }
 
 export function schemeToApi(scheme: Scheme) {
   return {
     ...scheme,
-    lastVerifiedAt: scheme.lastVerifiedAt ?? null,
+    officialSourceUrl: scheme.officialSourceUrl ?? null,
+    lastVerifiedAt: scheme.lastVerifiedAt?.toISOString() ?? null,
   };
 }
 
@@ -66,7 +67,7 @@ export function guideToApi(guide: DbDocumentGuide, forAdmin = false) {
       forAdmin || guide.verificationStatus === "verified"
         ? guide.expectedProcessingTime ?? null
         : null,
-    lastVerifiedAt: guide.lastVerifiedAt ?? null,
+    lastVerifiedAt: guide.lastVerifiedAt?.toISOString() ?? null,
   };
 }
 
@@ -144,24 +145,25 @@ export function evaluateScheme(scheme: Scheme, profile: ProfileValues) {
     farmer: profile.farmer,
     "business owner": profile.businessOwner,
     entrepreneur: profile.businessOwner,
-    employed: profile.employmentStatus === null ? null : profile.employmentStatus === "employed",
-    unemployed: profile.employmentStatus === null ? null : profile.employmentStatus === "unemployed",
+    employed:
+      profile.employmentStatus === null
+        ? null
+        : profile.employmentStatus.toLocaleLowerCase("en-IN") === "employed",
+    unemployed:
+      profile.employmentStatus === null
+        ? null
+        : profile.employmentStatus.toLocaleLowerCase("en-IN") === "unemployed",
   };
+  const profileOccupation = profile.occupation?.trim().toLocaleLowerCase("en-IN") ?? null;
   for (const target of scheme.occupations) {
     const key = target.trim().toLocaleLowerCase("en-IN");
     const flag = occupationAliases[key];
-    if (flag === null || flag === undefined) {
-      if (profile.occupation?.toLocaleLowerCase("en-IN") === key) {
-        matchedConditions.push(`Occupation matches ${target}.`);
-      } else if (!profile.occupation) {
-        unknownConditions.push(`Occupation (${target}) has not been confirmed.`);
-      } else {
-        failedConditions.push(`The stored record targets ${target}.`);
-      }
-    } else if (flag) {
+    if (profileOccupation === key || flag === true) {
       matchedConditions.push(`Occupation matches ${target}.`);
-    } else {
+    } else if (flag === false || profileOccupation) {
       failedConditions.push(`The stored record targets ${target}.`);
+    } else {
+      unknownConditions.push(`Occupation (${target}) has not been confirmed.`);
     }
   }
 

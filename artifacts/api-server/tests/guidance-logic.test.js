@@ -3,8 +3,10 @@ import test from "node:test";
 import {
   calculateProgress,
   evaluateScheme,
+  guideNeedsFallback,
   isPublicGuide,
   isPublicScheme,
+  statusCounts,
 } from "../src/lib/jansahay.ts";
 
 const scheme = {
@@ -75,9 +77,43 @@ test("known conflicting state and income rules produce a not-a-match result", ()
   assert.equal(result.failedConditions.length, 2);
 });
 
+test("a matching selected occupation is respected even when its optional toggle is unset", () => {
+  const result = evaluateScheme(scheme, {
+    ...matchingProfile,
+    student: false,
+  });
+  assert.ok(result.matchedConditions.some((item) => item.includes("Occupation matches student")));
+});
+
 test("document preparation progress counts only documents marked available", () => {
   assert.equal(calculateProgress(2, 3), 67);
   assert.equal(calculateProgress(0, 0), 0);
+});
+
+test("unknown checklist items are not counted as missing or ready", () => {
+  const counts = statusCounts(["available", "missing", "unknown", "needs_verification"]);
+  assert.deepEqual(counts, {
+    readyCount: 1,
+    missingCount: 1,
+    unknownCount: 2,
+    totalCount: 4,
+    progressPercent: 25,
+  });
+});
+
+test("unverified or instruction-free guides require the caution fallback", () => {
+  assert.equal(
+    guideNeedsFallback({ verificationStatus: "unverified", applicationSteps: ["Step one"] }),
+    true,
+  );
+  assert.equal(
+    guideNeedsFallback({ verificationStatus: "verified", applicationSteps: [] }),
+    true,
+  );
+  assert.equal(
+    guideNeedsFallback({ verificationStatus: "verified", applicationSteps: ["Step one"] }),
+    false,
+  );
 });
 
 test("public catalogs include published and demonstration records but exclude drafts and archives", () => {

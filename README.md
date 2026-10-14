@@ -34,6 +34,8 @@ Useful commands:
 pnpm --filter @workspace/api-server run typecheck
 pnpm --filter @workspace/jansahay run typecheck
 pnpm --filter @workspace/api-server run test
+pnpm --filter @workspace/api-server run build
+PORT=23914 BASE_PATH=/ pnpm --filter @workspace/jansahay run build
 pnpm run typecheck
 ```
 
@@ -45,6 +47,6 @@ pnpm --filter @workspace/api-spec run codegen
 
 ## Administrator access
 
-Admin API routes require a signed-in Clerk user with an `admin` role in the session's `publicMetadata` or `metadata`, or a user ID listed in the server-only `JANSAHAY_ADMIN_USER_IDS` environment variable. Keep role assignment restricted to trusted administrators. The client shows the admin navigation for Clerk users whose `publicMetadata.role` is `admin`.
+Admin API routes require a signed-in Clerk user with an `admin` role in the session's `publicMetadata` or `metadata`, or a user ID listed in `JANSAHAY_ADMIN_USER_IDS`. For the user-ID allowlist, set the same comma-separated IDs in `VITE_JANSAHAY_ADMIN_USER_IDS` so the client can show the admin navigation; user IDs are not credentials. Keep role assignment restricted to trusted administrators.
 
 Only use the guide verification action after checking the linked official source. It records the source and review date. Editing content clears a guide's prior verified status; outdated or unverified content remains visibly labeled.

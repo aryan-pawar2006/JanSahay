@@ -88,9 +88,10 @@ export interface CitizenProfileInput {
   socialCategory?: string | null;
 }
 
-export type CitizenProfile = CitizenProfileInput & {
-  updatedAt: string;
-};
+export type CitizenProfile = CitizenProfileInput & ({
+  /** @nullable */
+  updatedAt: string | null;
+});
 
 export interface SchemeDocument {
   documentType: string;
@@ -129,7 +130,8 @@ export interface Scheme {
   requiredDocuments: SchemeDocument[];
   /** @nullable */
   applicationInstructions?: string | null;
-  officialSourceUrl: string;
+  /** @nullable */
+  officialSourceUrl: string | null;
   /** @nullable */
   lastVerifiedAt?: string | null;
   verificationStatus: VerificationStatus;
