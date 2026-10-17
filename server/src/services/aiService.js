@@ -80,19 +80,48 @@ export class AIService {
     }
 
     // 2. Hindi language request
-    if (q.includes('hindi') || q.includes('हिंदी') || language === 'hi') {
+    if (language === 'hi' || q.includes('hindi') || q.includes('हिंदी') || q.includes('हिन्दी') || q.includes('mein') || q.includes('kya') || q.includes('chahiye') || q.includes('kaise')) {
       if (scheme) {
         return {
           answer: `**${scheme.name} - सरल हिंदी में विवरण:**\n\n` +
             `• **योजना का उद्देश्य:** ${scheme.description}\n` +
             `• **मुख्य लाभ:** ${scheme.benefit}\n` +
-            `• **आवश्यक दस्तावेज:** ${scheme.requiredDocuments ? scheme.requiredDocuments.map(d => d.documentName).join(', ') : 'आय प्रमाण पत्र, आधार कार्ड'}.\n` +
-            `• **आवेदन प्रक्रिया:** आधिकारिक वेबसाइट (${scheme.sourceUrl}) पर जाकर ऑनलाइन पंजीकरण करें।\n\n` +
+            `• **आवश्यक दस्तावेज:**\n${scheme.requiredDocuments ? scheme.requiredDocuments.map(d => '  - ' + d.documentName).join('\n') : '  - आय प्रमाण पत्र, आधार कार्ड'}\n` +
+            `• **आवेदन प्रक्रिया:** आधिकारिक वेबसाइट पर जाएं: [${scheme.sourceUrl}](${scheme.sourceUrl})\n` +
+            `• **अंतिम सत्यापन तारीख:** ${scheme.lastVerified}\n\n` +
             `⚠️ *अस्वीकरण: अंतिम पात्रता और आवेदन प्रक्रिया संबंधित सरकारी विभाग द्वारा सत्यापित की जाती है।*`,
           provider: 'JanSahay Verified Multilingual Engine (हिंदी)',
           isVerified: true
         };
       }
+      // General Hindi reply about document
+      const hindiDocGuide = (() => {
+        if (q.includes('income') || q.includes('aay') || q.includes('utpann')) return db.findOne('documentGuides', g => g.documentType === 'INCOME_CERTIFICATE');
+        if (q.includes('kisan') || q.includes('fasal') || q.includes('7/12') || q.includes('satbara')) return db.findOne('documentGuides', g => g.documentType === 'SEVEN_TWELVE_EXTRACT');
+        if (q.includes('jati') || q.includes('jaat') || q.includes('caste')) return db.findOne('documentGuides', g => g.documentType === 'CASTE_CERTIFICATE');
+        if (q.includes('niwas') || q.includes('domicile') || q.includes('adiwas')) return db.findOne('documentGuides', g => g.documentType === 'DOMICILE_CERTIFICATE');
+        if (q.includes('udyam') || q.includes('msme')) return db.findOne('documentGuides', g => g.documentType === 'UDYAM_REGISTRATION');
+        return null;
+      })();
+      if (hindiDocGuide) {
+        return {
+          answer: `**${hindiDocGuide.title} - हिंदी में मार्गदर्शन:**\n\n` +
+            `• **जारीकर्ता प्राधिकरण:** ${hindiDocGuide.issuingAuthority}\n` +
+            `• **कहाँ आवेदन करें:** [${hindiDocGuide.officialApplicationUrl}](${hindiDocGuide.officialApplicationUrl}) या नजदीकी CSC / जन सेवा केंद्र\n` +
+            `• **आवश्यक दस्तावेज:**\n${hindiDocGuide.requiredSupportingDocuments.map(d => '  - ' + d).join('\n')}\n` +
+            `• **शुल्क:** ${hindiDocGuide.possibleFees || 'न्यूनतम सरकारी शुल्क'}\n` +
+            `• **अनुमानित समय:** ${hindiDocGuide.expectedProcessingTime || '15-21 कार्य दिवस'}\n\n` +
+            `*स्रोत: जनसहाय AI सत्यापित ज्ञान आधार — ${hindiDocGuide.lastVerifiedAt}*`,
+          provider: 'JanSahay Verified Multilingual Engine (हिंदी)',
+          isVerified: true,
+          officialUrl: hindiDocGuide.officialApplicationUrl
+        };
+      }
+      return {
+        answer: `**जनसहाय AI में आपका स्वागत है!**\n\nमैं आपको सरकारी योजनाओं (PM-KISAN, PM Mudra, PMAY, आयुष्मान भारत), पात्रता शर्तों और आवश्यक दस्तावेज़ों के बारे में हिंदी में सटीक जानकारी दे सकता हूँ।\n\nउदाहरण के लिए पूछें: *"आय प्रमाण पत्र कैसे बनवाएं?"* या *"PM-KISAN के लिए कौन से दस्तावेज़ चाहिए?"*`,
+        provider: 'JanSahay Verified Multilingual Engine (हिंदी)',
+        isVerified: true
+      };
     }
 
     // 3. Why is this scheme recommended?

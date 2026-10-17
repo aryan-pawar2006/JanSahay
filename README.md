@@ -1,189 +1,254 @@
-# 🇮🇳 JANSAHAY AI 2.0
-## Smart Government Scheme Discovery & Document Guidance System
+# 🇮🇳 JanSahay AI — Government Scheme Discovery & Smart Document Guidance System
 
-> **College Mini-Project Subject Submission & Comprehensive Presentation Guide**  
-> **Tagline:** *"Discover. Understand. Prepare. Apply."*
+> **College Mini-Project | Computer Engineering | Academic Year 2026-27**
 
----
-
-## 1. Project Overview & One-Line Pitch
-
-> **One-Line Idea:** *"Tell the application about your situation, and JanSahay AI shows government support, documents, eligibility explanations, and next steps that may be relevant to you."*
-
-Citizens across India frequently miss out on critical government benefits, subsidies, and scholarships because:
-1. Information is scattered across hundreds of departmental portals.
-2. Official eligibility conditions are written in complex legalistic terminology.
-3. Citizens do not know what documents are required or how to obtain missing certificates (e.g., Tehsildar Income Certificate, Domicile, Non-Creamy Layer, 7/12 Extract, Udyam MSME).
-
-**JanSahay AI** solves this by offering an end-to-end civic journey:
-$$\text{Citizen Profile} \longrightarrow \text{Deterministic Rule Matching} \longrightarrow \text{Document Checklist} \longrightarrow \text{State Acquisition Guides} \longrightarrow \text{Grounded Multilingual AI}$$
+A full-stack web application that helps Indian citizens discover relevant government welfare schemes, understand eligibility in simple language, identify missing documents, and follow step-by-step document acquisition and application guides.
 
 ---
 
-## 2. Live Application Access
+## 🚀 Quick Start (3 Steps)
 
-The application is running and accessible immediately:
-
-| Service | Local URL | Description |
-| :--- | :--- | :--- |
-| **Frontend Portal** | [http://localhost:5173](http://localhost:5173) | Responsive React citizen interface |
-| **Backend REST API** | [http://localhost:5000/api/health](http://localhost:5000/api/health) | Node.js + Express API engine |
-| **Schemes Catalog API** | [http://localhost:5000/api/schemes](http://localhost:5000/api/schemes) | Central & State schemes endpoint |
-| **Document Guides API** | [http://localhost:5000/api/documents/guides](http://localhost:5000/api/documents/guides) | State document acquisition guides |
-
----
-
-## 3. Pre-Configured Test Credentials (1-Click Demo)
-
-The login page includes **1-click quick-login buttons** designed for academic viva evaluation:
-
-| Profile | Credentials | Context / Use Case |
-| :--- | :--- | :--- |
-| 👨‍🎓 **Student** | `student@jansahay.ai` / `Student@123` | Undergrad B.Tech Student, Pune, Maharashtra (Income &lt; ₹2 Lakh) |
-| 🌾 **Farmer** | `farmer@jansahay.ai` / `Farmer@123` | Cultivator with 3.5 acres, Satara, Maharashtra (Sugarcane/Soybean) |
-| 💼 **Business** | `business@jansahay.ai` / `Business@123` | Agro-processing Startup Entrepreneur, Mumbai (MSME Registered) |
-| 🛡️ **Administrator** | `admin@jansahay.gov.in` / `Admin@123` | Knowledge base manager (Verify/publish document guides) |
-
----
-
-## 4. Key Features Implemented
-
-### 1. Smart Progressive Citizen Profile
-- Asks questions progressively based on the selected category (**Student**, **Farmer**, **Business Owner**, **Job Seeker**, **General Citizen**).
-- **Data Minimization:** Strictly avoids asking for or storing Aadhaar numbers, bank account numbers, or government passwords.
-
-### 2. Deterministic Eligibility Rule Engine
-- **Core Principle:** AI does **NOT** decide legal eligibility. A transparent, auditable rule engine evaluates mathematical and relational criteria (`EQUALS`, `NOT_EQUALS`, `IN`, `GREATER_THAN`, `LESS_THAN`).
-- **Match Tiers:**
-  - 🟢 **Strong Match** ($\ge 80\%$ criteria met, all mandatory conditions satisfied)
-  - 🟡 **Potential Match** ($\ge 50\%$ criteria met)
-  - 🔵 **More Information Required** (Unrecorded profile fields)
-  - 🔴 **Not a Match** (Failed a mandatory prerequisite)
-- Explains **why** a scheme matched by listing satisfied conditions, failed criteria, and missing fields.
-
-### 3. Integrated 3-Section Scheme Experience
-When opening any recommended scheme:
-- **Section A: Scheme Eligibility** (matched rules breakdown, target beneficiaries, income ceiling)
-- **Section B: Required Documents Checklist** (live status: Available, Missing, Needs Verification, Unknown)
-- **Section C: How to Obtain Missing Documents** (guidance cards with 1-click acquisition modals)
-
-### 4. Smart Document Acquisition Guides
-Complete manuals explaining how citizens can obtain certificates without paying unofficial agents:
-1. **Income Certificate (उत्पन्नाचा दाखला)** — Revenue Dept / Tehsildar (Aaple Sarkar)
-2. **Domicile & Nationality Certificate (अधिवास दाखला)** — Executive Magistrate
-3. **Caste Certificate (जातीचे प्रमाणपत्र)** — Sub-Divisional Officer (SDO)
-4. **Non-Creamy Layer Certificate (नॉन-क्रिमीलेअर)** — Revenue Dept
-5. **7/12 & 8A Land Extract (सातबारा उतारा)** — Mahabhumi Digital Portal
-6. **Udyam MSME Registration (उद्यम नोंदणी)** — Ministry of MSME
-7. **College Bonafide Certificate** — University / Institute Registrar
-8. **UDID Disability Certificate (दिव्यांग प्रमाणपत्र)** — Swavlamban Portal / District Hospital
-9. **Caste Validity Certificate (जात पडताळणी)** — BARTI Scrutiny Committee
-10. **Digital Ration Card** — Food & Civil Supplies Department
-
-Each guide provides:
-- Authority name
-- Supporting documents checklist
-- Step-by-step application instructions (Online vs. Offline)
-- Official application links
-- Processing fees and timelines
-- Verification badge (**Verified Official Guide**, **Verification Pending**, or **Outdated**)
-
-### 5. Document Preparation Dashboard ("My Document Preparation")
-- Consolidates all required documents across all matched schemes.
-- **Deduplication:** If 3 schemes require an "Income Certificate", it appears once with badges showing all 3 dependent schemes.
-- Overall readiness progress bar ($\%$ prepared).
-- Direct "I Already Have This Document" toggle that updates the entire system instantly.
-
-### 6. Grounded Multilingual AI Assistant
-- Context-grounded Q&A engine that strictly references verified scheme records.
-- Multilingual responses: Supports **English**, **Marathi (मराठी)**, and **Hindi (हिन्दी)**.
-- Shortcut chips for quick citizen inquiries:
-  - *"Why is this scheme recommended for me?"*
-  - *"How do I get an Income Certificate in Maharashtra?"*
-  - *"मराठीत माहिती द्या (Explain in Marathi)"*
-  - *"सरल हिंदी में समझाइए (Explain in Hindi)"*
-- Runs with a deterministic grounded engine out-of-the-box, with optional Gemini LLM integration via `GEMINI_API_KEY`.
-
-### 7. Real-Time Government Updates & Live Sync
-- Live ticker for scholarship deadlines, PM-Kisan installments, and policy updates.
-- Interactive "Sync Live Feeds" button.
-
-### 8. Admin Knowledge Base Console
-- Add, update, verify, publish, and archive document guides.
-- Review how many schemes reference each guide.
-- Mark guides as **Verified** or **Outdated** to maintain data integrity.
-
----
-
-## 5. College Viva Presentation Script (What to Say to Examiners)
-
+### Step 1 — First-Time Setup (Only Once)
 ```
-Examiner: "What is the problem your project solves?"
-You:
-"Sir/Madam, citizens often miss out on government schemes because information
-is fragmented across different departmental portals and eligibility rules are written
-in complex legal language. Furthermore, citizens don't know what certificates they
-need or how to obtain them. JanSahay AI personalizes scheme discovery, uses a
-transparent deterministic rule engine to explain why a scheme matched, identifies
-missing documents, and provides state-specific guides on how to obtain certificates
-from official authorities without agent fees."
-
-Examiner: "Why didn't you use AI directly to calculate eligibility?"
-You:
-"Sir, government eligibility rules must be 100% auditable and deterministic.
-AI language models can hallucinate or change criteria. In JanSahay AI, our rule
-engine performs deterministic mathematical evaluations against verified government
-criteria, while our AI assistant is strictly grounded in that verified database to
-explain the results in simple English, Marathi, or Hindi."
-
-Examiner: "Show me a demo of a student in Maharashtra."
-You:
-1. Click '👨‍🎓 Student Demo' on the top bar or login page.
-2. The system loads Rahul Patil (Undergrad B.Tech student in Pune, Income < ₹2L).
-3. Open 'Recommendations' — observe 100% Strong Match for 'Rajarshi Chhatrapati Shahu Maharaj EBC Scholarship'.
-4. Click 'Check Required Documents & Guidance'.
-5. Point out Section A (Matched conditions), Section B (Missing Income Certificate warning),
-   and Section C ('How to Obtain Missing Documents').
-6. Click 'How to Get This Document' on Income Certificate — showcase the Aaple Sarkar online
-   steps, Tehsildar issuing authority, ₹33.60 fee, and supporting documents.
-7. Click 'I Already Have This Document' — watch the readiness bar update to 100%!
-8. Open 'Ask JanSahay AI' and click 'मराठीत माहिती द्या' to show the Marathi explanation.
+Double-click: setup.bat
 ```
+This installs all dependencies automatically.
 
----
-
-## 6. System Architecture
-
+### Step 2 — Run the App
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                   JANSAHAY AI ARCHITECTURE                       │
-├─────────────────────────────────┬────────────────────────────────┤
-│  Frontend (React 18 + Vite)     │   Backend (Node.js + Express)  │
-│  - Plus Jakarta Sans UI         │   - JWT & Role Auth Middleware │
-│  - React Router v6              │   - Deterministic Rule Engine  │
-│  - Context (Auth & Language)    │   - Document Analysis Service  │
-│  - Multilingual (EN, MR, HI)    │   - Grounded AI Engine         │
-│  - 3-Section Scheme View        │   - Realtime Sync Service      │
-│  - Prep Dashboard & Modal       │   - 10 Modular REST Routes     │
-└─────────────────────────────────┴────────────────┬───────────────┘
-                                                   │
-                                                   ▼
-                                     Embedded Persistent Store
-                                     (jansahay-db.json in /data)
+Double-click: run.bat
 ```
-
----
-
-## 7. How to Start the Application
-
-### Option A: 1-Click Windows Batch Script
-Double-click `run.bat` in this folder.
-
-### Option B: Command Line (PowerShell / Terminal)
+OR in terminal:
 ```bash
-# In the project directory
 node start-dev.js
 ```
-- Starts Backend on: `http://localhost:5000`
-- Starts Frontend on: `http://localhost:5173`
-- Open `http://localhost:5173` in any browser!
+
+### Step 3 — Open in Browser
+- **Citizen Portal:** http://localhost:5173
+- **API Server:** http://localhost:5000/api/health
+
+---
+
+## 🎯 1-Click Demo Login Credentials
+
+| Role | Email | Password | Demonstrates |
+|------|-------|----------|-------------|
+| 👨‍🎓 Student | `student@jansahay.ai` | `Student@123` | Scholarship matching, income/caste cert guidance |
+| 🌾 Farmer | `farmer@jansahay.ai` | `Farmer@123` | PM-KISAN, Fasal Bima, Namo Shetkari matching |
+| 💼 Business | `business@jansahay.ai` | `Business@123` | PMEGP, Mudra Yojana, Startup India |
+| 🛡️ Admin | `admin@jansahay.gov.in` | `Admin@123` | Full admin dashboard |
+
+> **Or just click the 1-click demo buttons on the Login page — no typing needed!**
+
+---
+
+## 📋 Features
+
+### 1. Personalized Citizen Profile (Progressive Questions)
+- Category-based wizard: Student, Farmer, Business Owner, Job Seeker, General Citizen
+- Asks only questions relevant to the citizen's situation
+- **Privacy First:** Never collects Aadhaar numbers, bank details, or passwords
+
+### 2. Explainable Eligibility Matching Engine
+- Evaluates each scheme rule-by-rule against citizen profile
+- Returns: **Strong Match** / **Potential Match** / **More Info Required** / **Not a Match**
+- Shows exactly which conditions matched, which failed, and which are unknown
+
+### 3. Automatic Missing-Document Detection
+- Compares scheme requirements against citizen's document checklist
+- Status tracking: ✅ Available | ❌ Missing | ⚠️ Needs Verification | ❓ Not Checked
+- Real-time readiness percentage per scheme
+
+### 4. 9-Point Smart Document Acquisition Guides
+Each guide includes:
+1. What is this document?
+2. Why do you need it?
+3. Issuing authority
+4. State-specific procedure
+5. Required supporting documents
+6. Online application steps (Aaple Sarkar, UMANG, DigiLocker)
+7. Offline / CSC Kiosk steps
+8. Official government portal links
+9. Fees, timelines & citizen tips
+
+### 5. Consolidated Document Preparation Dashboard
+- **Cross-scheme deduplication:** One Income Certificate covers 4 schemes — shown once
+- Print/Save as PDF official document checklist
+- Offline CSC Kiosk guidance for citizens without internet access
+
+### 6. Scheme Application Roadmap
+- Step-by-step numbered application process per scheme
+- Direct links to official government portals
+- Printable roadmap PDF
+
+### 7. Multilingual AI Assistant
+- Responds in **English**, **मराठी (Marathi)**, and **हिन्दी (Hindi)**
+- Grounded strictly on the verified scheme and document knowledge base
+- No hallucinations — falls back to transparent "not yet verified" messaging
+
+### 8. Real-Time Policy Updates
+- Live feed of verified government announcements
+- Scholarship deadline extensions, DBT notifications, portal alerts
+- "Sync Live Feeds" button to refresh
+
+### 9. Admin Knowledge Base Management
+- Create, edit, verify, and publish schemes
+- Manage document acquisition guides
+- Broadcast policy announcements
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18 + Vite + Custom CSS (NIC/Gov.in style) |
+| **Backend** | Node.js + Express.js (ESM modules) |
+| **Database** | File-backed JSON database (`server/data/jansahay-db.json`) |
+| **Auth** | JWT (jsonwebtoken) + bcryptjs |
+| **AI** | Grounded deterministic engine (optional Gemini API upgrade) |
+| **Icons** | Lucide React |
+| **HTTP Client** | Axios |
+
+> **Why file-based DB?** Zero setup, zero cloud credentials, works instantly on any machine — perfect for college demos and local presentations.
+
+---
+
+## 📁 Project Structure
+
+```
+JanSahay-github/
+├── setup.bat              ← Run once to install dependencies
+├── run.bat                ← Launch full app (backend + frontend)
+├── start-dev.js           ← Node launcher script
+├── package.json
+│
+├── server/                ← Node.js + Express Backend
+│   ├── src/
+│   │   ├── server.js      ← Express app entry point
+│   │   ├── config.js      ← Environment config
+│   │   ├── db/
+│   │   │   ├── database.js   ← File-backed JSON CRUD engine
+│   │   │   └── seedData.js   ← 12 schemes, 10 doc guides, 4 users
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js
+│   │   │   └── adminMiddleware.js
+│   │   ├── routes/        ← 10 REST route modules
+│   │   └── services/
+│   │       ├── eligibilityEngine.js       ← Deterministic rule evaluator
+│   │       ├── documentAnalysisService.js ← Cross-scheme deduplication
+│   │       ├── aiService.js               ← Multilingual grounded AI
+│   │       └── realtimeService.js         ← Live updates sync
+│   └── data/
+│       └── jansahay-db.json  ← Persistent database file
+│
+└── client/                ← React 18 + Vite Frontend
+    ├── src/
+    │   ├── App.jsx        ← Router (11 pages)
+    │   ├── main.jsx
+    │   ├── index.css      ← NIC-style civic design system
+    │   ├── context/
+    │   │   ├── AuthContext.jsx     ← JWT auth state
+    │   │   └── LanguageContext.jsx ← EN/MR/HI translations
+    │   ├── components/
+    │   │   ├── Navbar.jsx
+    │   │   ├── Footer.jsx
+    │   │   ├── AIChatDrawer.jsx         ← Floating AI assistant
+    │   │   └── DocumentGuideModal.jsx   ← 9-point guide modal
+    │   ├── pages/
+    │   │   ├── HomePage.jsx
+    │   │   ├── LoginPage.jsx
+    │   │   ├── RegisterPage.jsx
+    │   │   ├── ProfileWizardPage.jsx
+    │   │   ├── RecommendationsPage.jsx
+    │   │   ├── SchemesCatalogPage.jsx
+    │   │   ├── SchemeDetailPage.jsx
+    │   │   ├── DocumentPreparationPage.jsx
+    │   │   ├── DocumentGuidesCatalogPage.jsx
+    │   │   ├── LiveUpdatesPage.jsx
+    │   │   └── AdminDashboardPage.jsx
+    │   └── services/
+    │       └── api.js     ← Axios + JWT interceptor
+    └── dist/              ← Production build output
+```
+
+---
+
+## 🔌 REST API Endpoints
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/health` | GET | — | Server health check |
+| `/api/auth/login` | POST | — | Login with email/password |
+| `/api/auth/register` | POST | — | Register new citizen |
+| `/api/auth/quick-login` | POST | — | 1-click demo login |
+| `/api/profile` | GET/POST | ✅ | Get / save citizen profile |
+| `/api/schemes` | GET | — | Paginated schemes catalog |
+| `/api/schemes/:id` | GET | — | Single scheme details |
+| `/api/schemes/:id/document-readiness` | GET | ✅ | Doc readiness for scheme |
+| `/api/recommendations` | GET | ✅ | Personalized eligibility matches |
+| `/api/documents` | GET | ✅ | User document checklist |
+| `/api/documents/status` | PUT | ✅ | Update document status |
+| `/api/documents/preparation-dashboard` | GET | ✅ | Consolidated deduped dashboard |
+| `/api/documents/guides` | GET | — | All document guides |
+| `/api/documents/guides/by-type/:type` | GET | — | Guide by document type |
+| `/api/ai/chat` | POST | — | AI assistant question/answer |
+| `/api/updates` | GET | — | Policy updates feed |
+| `/api/realtime/sync` | POST | — | Trigger live data sync |
+| `/api/admin/*` | ALL | ✅ Admin | Admin CRUD operations |
+
+---
+
+## 📊 Pre-Loaded Government Schemes (12 Verified)
+
+| # | Scheme | Level | Category |
+|---|--------|-------|----------|
+| 1 | Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna (EBC) | State | Education |
+| 2 | Dr. Punjabrao Deshmukh Vastigruh Nirvah Bhatta Yojna | State | Education |
+| 3 | Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) | Central | Agriculture |
+| 4 | Namo Shetkari Mahasanman Nidhi Yojana | State | Agriculture |
+| 5 | Pradhan Mantri Mudra Yojana (PMMY) | Central | Business |
+| 6 | Chief Minister Employment Generation Programme (CMEGP) | State | Business |
+| 7 | Pradhan Mantri Awas Yojana - Urban (PMAY-U) | Central | Housing |
+| 8 | Ayushman Bharat - PM Jan Arogya Yojana (PM-JAY) | Central | Healthcare |
+| 9 | PM Vishwakarma Scheme | Central | Business |
+| 10 | Startup India Seed Fund Scheme (SISFS) | Central | Business |
+| 11 | Post Matric Scholarship for SC/ST Students | State | Education |
+| 12 | Pradhan Mantri Fasal Bima Yojana (PMFBY) | Central | Agriculture |
+
+---
+
+## 📄 Smart Document Guides (10 Verified)
+
+| Document | Issuing Authority | State |
+|----------|------------------|-------|
+| Income Certificate (उत्पन्नाचा दाखला) | Tehsildar / SDO | Maharashtra |
+| Domicile & Nationality Certificate | Executive Magistrate | Maharashtra |
+| Caste Certificate (जातीचे प्रमाणपत्र) | Sub-Divisional Officer | Maharashtra |
+| Non-Creamy Layer Certificate (NCL) | SDO / Tehsildar | Maharashtra |
+| 7/12 & 8A Land Extract | Talathi / Mahabhumi Portal | Maharashtra |
+| Udyam MSME Registration | Ministry of MSME | All India |
+| College Bonafide Certificate | College/Institute Administration | All India |
+| UDID Disability Certificate | CMO / Civil Hospital | All India |
+| Caste Validity Certificate | Caste Scrutiny Committee | Maharashtra |
+| Digital Ration Card | Food & Civil Supplies Dept. | Maharashtra |
+
+---
+
+## 🎓 College Viva Presentation Script (5 Minutes)
+
+1. **Intro (30s):** Open http://localhost:5173 → switch language to **मराठी** (top bar) to show vernacular support
+2. **Profile & Matching (90s):** Click **"Student Demo"** on Login → go to `/recommendations` → show 5 Strong Matches with transparent rule explanations
+3. **Missing Docs & Guide (90s):** Click any scheme → scroll to **Section B** (Documents Checklist) → click orange **"How to Get This Document"** for Caste Validity Certificate
+4. **Preparation Dashboard (60s):** Click **"My Documents"** nav link → show cross-scheme deduplication → click **"Print / Save PDF"**
+5. **AI & Updates (30s):** Open the AI chat bubble (bottom right) → ask *"Income certificate kaise milega?"* → open `/updates` for policy alerts
+
+---
+
+## 📌 Important Note on Data
+
+All scheme and document information stored in this application comes from verified government portals (MahaDBT, PM-KISAN, PMAY official portals) and is clearly labelled with `lastVerifiedAt` dates. The system does **not** claim real-time live data unless explicitly synced. Citizens are always directed to official government portals for final verification.
+
+---
+
+*Built with ❤️ for Digital India | JanSahay AI v2.0 | 2026*
