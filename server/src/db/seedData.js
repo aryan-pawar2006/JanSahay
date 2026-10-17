@@ -818,6 +818,423 @@ export const initialSeedData = {
         { stepNumber: 2, title: "Enroll at CSC or Bank Branch", instruction: "Apply on pmfby.gov.in before the sowing cut-off deadline (usually July 15 for Kharif).", sourceUrl: "https://pmfby.gov.in" }
       ]
     }
+    ,
+    {
+      id: 13,
+      name: "PM SVANidhi — PM Street Vendor's AtmaNirbhar Nidhi",
+      description: "Micro-credit scheme providing affordable collateral-free working capital loans to street vendors helping them resume livelihoods and build credit history.",
+      category: "BUSINESS",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Street vendors / hawkers / thela operators with Urban Local Body Certificate of Vending.",
+      ageCondition: "18 years and above.",
+      educationCondition: "None.",
+      incomeCondition: "Street vendor.",
+      benefit: "Collateral-free loans: ₹10,000 (Level 1), ₹20,000 (Level 2), ₹50,000 (Level 3) on timely repayment. Cashback reward on digital transactions.",
+      sourceUrl: "https://pmsvanidhi.mohua.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "BUSINESS_OWNER,GENERAL_CITIZEN", description: "Street vendor / hawker", required: true }],
+      requiredDocuments: [
+        { id: 1301, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "KYC", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 1302, documentType: "VENDING_CERTIFICATE", documentName: "Certificate of Vending / ULB Letter", purpose: "Vendor identity", requiredFlag: true, issuingAuthority: "Urban Local Body" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Apply on PM SVANidhi Portal", instruction: "Visit pmsvanidhi.mohua.gov.in or contact nearest MFI/SHG/Bank branch.", sourceUrl: "https://pmsvanidhi.mohua.gov.in" }]
+    },
+    {
+      id: 14,
+      name: "Stand-Up India Scheme",
+      description: "Facilitates bank loans of ₹10 Lakh to ₹1 Crore to SC/ST borrowers and women entrepreneurs for setting up greenfield manufacturing or service enterprises.",
+      category: "BUSINESS",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "SC/ST and Women entrepreneurs setting up new greenfield enterprises.",
+      ageCondition: "18 years and above.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "Composite loan of ₹10 Lakh to ₹1 Crore (75% of project cost) with 7-year repayment.",
+      sourceUrl: "https://www.standupmitra.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "EQUALS", value: "BUSINESS_OWNER", description: "New enterprise entrepreneur", required: true }],
+      requiredDocuments: [
+        { id: 1401, documentType: "CASTE_CERTIFICATE", documentName: "Caste Certificate (SC/ST)", purpose: "Category eligibility", requiredFlag: false, issuingAuthority: "SDO" },
+        { id: 1402, documentType: "PROJECT_REPORT", documentName: "Detailed Project Report", purpose: "Loan assessment", requiredFlag: true, issuingAuthority: "CA / Promoter" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Register on Stand-Up Mitra Portal", instruction: "Register on standupmitra.in and get handholding support.", sourceUrl: "https://www.standupmitra.in" }]
+    },
+    {
+      id: 15,
+      name: "Sukanya Samriddhi Yojana (SSY)",
+      description: "Small savings scheme for girl children below 10 years offering the highest guaranteed interest rate (8.2% p.a.) with full EEE tax exemption.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Parents / legal guardians of girl children below 10 years.",
+      ageCondition: "Girl child below 10 years at account opening.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "8.2% guaranteed annual interest; full EEE tax exemption; partial withdrawal at 18 for education; maturity at 21.",
+      sourceUrl: "https://www.indiapost.gov.in/Financial/Pages/Content/SSY.aspx",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "GENERAL_CITIZEN,STUDENT", description: "Girl child account", required: true }],
+      requiredDocuments: [
+        { id: 1501, documentType: "BIRTH_CERTIFICATE", documentName: "Birth Certificate of Girl Child", purpose: "Age verification", requiredFlag: true, issuingAuthority: "Municipal Corporation" },
+        { id: 1502, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card of Parent/Guardian", purpose: "Account holder KYC", requiredFlag: true, issuingAuthority: "UIDAI" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Visit Post Office or Authorised Bank", instruction: "Open SSY account at any India Post office or authorised bank (SBI, HDFC etc.) with minimum ₹250 deposit.", sourceUrl: "https://www.indiapost.gov.in" }]
+    },
+    {
+      id: 16,
+      name: "Atal Pension Yojana (APY)",
+      description: "Guaranteed minimum pension scheme for unorganised sector workers ensuring social security in old age with government co-contribution.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Citizens 18-40 years working in unorganised sector, not covered by statutory social security. Income taxpayers ineligible (w.e.f. Oct 2022).",
+      ageCondition: "18 to 40 years at enrollment.",
+      educationCondition: "None.",
+      incomeCondition: "Income taxpayers not eligible.",
+      benefit: "Guaranteed monthly pension of ₹1,000 to ₹5,000 after age 60, based on contribution and entry age.",
+      sourceUrl: "https://npscra.nsdl.co.in/scheme-details.php",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "FARMER,GENERAL_CITIZEN,BUSINESS_OWNER", description: "Unorganised sector worker 18-40 years", required: true }],
+      requiredDocuments: [
+        { id: 1601, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "KYC", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 1602, documentType: "BANK_PASSBOOK", documentName: "Active Savings Bank Account", purpose: "Auto-debit setup", requiredFlag: true, issuingAuthority: "Bank" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Enroll at Bank Branch / Net Banking", instruction: "Fill APY registration form at your bank branch or use net banking / mobile banking app.", sourceUrl: "https://npscra.nsdl.co.in" }]
+    },
+    {
+      id: 17,
+      name: "Pradhan Mantri Jan Dhan Yojana (PMJDY)",
+      description: "National financial inclusion mission ensuring universal access to banking, savings, credit, insurance, and remittance for every household.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "All citizens without a basic savings bank account — especially women, rural households, and migrant workers.",
+      ageCondition: "10 years and above.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "Zero-balance savings account, RuPay card with ₹2 Lakh accident insurance, ₹30,000 life cover, ₹10k overdraft after 6 months.",
+      sourceUrl: "https://pmjdy.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [],
+      requiredDocuments: [
+        { id: 1701, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "KYC / Account opening", requiredFlag: true, issuingAuthority: "UIDAI" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Visit Any Bank Branch with Aadhaar", instruction: "Walk into any nationalized bank or banking correspondent outlet with Aadhaar to open a zero-balance Jan Dhan account.", sourceUrl: "https://pmjdy.gov.in" }]
+    },
+    {
+      id: 18,
+      name: "National Scholarship Portal (NSP) — Central Schemes",
+      description: "One-stop platform providing Post-Matric, Pre-Matric, and Merit-cum-Means scholarships from multiple central ministries to SC, ST, OBC, Minority, and EWS students.",
+      category: "EDUCATION",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "SC, ST, OBC, EWS, Minority students in schools, colleges, and professional institutions.",
+      ageCondition: "School and college-going students.",
+      educationCondition: "Class 1 to Postgraduate courses.",
+      incomeCondition: "₹2.5 Lakh (SC/ST) to ₹8 Lakh (OBC/Minority) depending on scheme.",
+      benefit: "₹230 to ₹1,200/month maintenance + full tuition fees depending on institution and course.",
+      sourceUrl: "https://scholarships.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [
+        { field: "category", operator: "EQUALS", value: "STUDENT", description: "Active student enrollment required", required: true },
+        { field: "incomerange", operator: "IN", value: "BELOW_1_LAKH,BELOW_2_LAKH,BELOW_3_LAKH,BELOW_5_LAKH", description: "Within income ceiling for respective scheme", required: true }
+      ],
+      requiredDocuments: [
+        { id: 1801, documentType: "INCOME_CERTIFICATE", documentName: "Income Certificate (Competent Authority)", purpose: "Income tier verification", requiredFlag: true, issuingAuthority: "Tehsildar" },
+        { id: 1802, documentType: "CASTE_CERTIFICATE", documentName: "Caste Certificate", purpose: "Category verification", requiredFlag: true, issuingAuthority: "SDO" },
+        { id: 1803, documentType: "BONAFIDE_CERTIFICATE", documentName: "Bonafide Certificate from Institution", purpose: "Active enrollment", requiredFlag: true, issuingAuthority: "College Principal" }
+      ],
+      applicationGuides: [
+        { stepNumber: 1, title: "Register on National Scholarship Portal", instruction: "Visit scholarships.gov.in, click 'New Registration' and choose application year.", sourceUrl: "https://scholarships.gov.in" },
+        { stepNumber: 2, title: "Fill Academic & Income Details", instruction: "Enter course, institution, income details and upload documents before October 31 deadline.", sourceUrl: "https://scholarships.gov.in" }
+      ]
+    },
+    {
+      id: 19,
+      name: "Pradhan Mantri Ujjwala Yojana 2.0 (PMUY)",
+      description: "Free LPG connection scheme for women from BPL households enabling clean cooking fuel access and reducing indoor air pollution.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Women from BPL / SECC / SC/ST / PMAY households without existing LPG connection.",
+      ageCondition: "Adult woman (18+).",
+      educationCondition: "None.",
+      incomeCondition: "Below Poverty Line household.",
+      benefit: "Free LPG deposit waiver, 1 free refill, stove and regulator on easy EMI.",
+      sourceUrl: "https://pmuy.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [
+        { field: "incomerange", operator: "IN", value: "BELOW_1_LAKH,BELOW_2_LAKH", description: "BPL household", required: true }
+      ],
+      requiredDocuments: [
+        { id: 1901, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card of applicant woman", purpose: "Identity", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 1902, documentType: "RATION_CARD", documentName: "BPL Ration Card or SECC declaration", purpose: "BPL eligibility", requiredFlag: true, issuingAuthority: "Food Dept" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Apply at LPG Distributor", instruction: "Submit application at nearest HP / Bharat / Indane Gas distributor with Aadhaar and BPL ration card.", sourceUrl: "https://pmuy.gov.in" }]
+    },
+    {
+      id: 20,
+      name: "Beti Bachao Beti Padhao (BBBP)",
+      description: "Multi-sectoral programme to prevent gender-biased sex selection and ensure survival, protection, and education of girl children across India.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Girl children, pregnant women, and families in gender-critical districts.",
+      ageCondition: "Girl children from birth.",
+      educationCondition: "School enrollment and retention of girls.",
+      incomeCondition: "None.",
+      benefit: "Free girl child registration, conditional cash support for education and healthcare, linked with SSY, PCPNDT enforcement and school retention programs.",
+      sourceUrl: "https://wcd.nic.in/schemes/beti-bachao-beti-padhao-scheme",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [],
+      requiredDocuments: [{ id: 2001, documentType: "BIRTH_CERTIFICATE", documentName: "Girl Child Birth Certificate", purpose: "Registration", requiredFlag: true, issuingAuthority: "Municipal Corporation" }],
+      applicationGuides: [{ stepNumber: 1, title: "Contact ICDS Anganwadi Centre", instruction: "Register at nearest Anganwadi Centre for BBBP programs, free health checkups, and welfare services.", sourceUrl: "https://wcd.nic.in" }]
+    },
+    {
+      id: 21,
+      name: "Soil Health Card Scheme",
+      description: "Government scheme issuing Soil Health Cards to farmers every 2 years with crop-wise fertilizer recommendations based on soil testing to improve productivity.",
+      category: "AGRICULTURE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "All landholding farmers across India.",
+      ageCondition: "No restriction.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "FREE soil testing (macro & micro nutrients), crop-wise fertilizer dosage recommendation, long-term productivity improvement.",
+      sourceUrl: "https://soilhealth.dac.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "EQUALS", value: "FARMER", description: "Agricultural landholder", required: true }],
+      requiredDocuments: [
+        { id: 2101, documentType: "SEVEN_TWELVE_EXTRACT", documentName: "7/12 Land Extract", purpose: "Land verification", requiredFlag: true, issuingAuthority: "Revenue Dept" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Contact Block Agriculture Office", instruction: "Register at Block Agriculture Office or Krishi Seva Kendra for free soil sample collection.", sourceUrl: "https://soilhealth.dac.gov.in" }]
+    },
+    {
+      id: 22,
+      name: "eNAM — National Agriculture Market",
+      description: "Pan-India electronic trading portal integrating APMCs for online price discovery and seamless trade of agricultural commodities across 1000+ mandis.",
+      category: "AGRICULTURE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Farmers wishing to sell agricultural produce at competitive prices beyond local mandi.",
+      ageCondition: "18 years and above.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "Access to 1000+ APMCs, real-time price discovery, reduced intermediary fees, direct payment to bank account, lower post-harvest losses.",
+      sourceUrl: "https://enam.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "EQUALS", value: "FARMER", description: "Farmer / agricultural trader", required: true }],
+      requiredDocuments: [
+        { id: 2201, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "Registration", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 2202, documentType: "BANK_PASSBOOK", documentName: "Bank Passbook", purpose: "Payment settlement", requiredFlag: true, issuingAuthority: "Bank" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Register on eNAM Portal", instruction: "Visit enam.gov.in and register as farmer/FPO. Approach nearest eNAM-enabled APMC mandi.", sourceUrl: "https://enam.gov.in" }]
+    },
+    {
+      id: 23,
+      name: "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY)",
+      description: "Free food grain distribution providing additional 5 kg wheat/rice per person per month free of cost to all NFSA ration card holders, extended through December 2028.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "All NFSA ration card holders — AAY and Priority Household (PHH) cards.",
+      ageCondition: "No restriction.",
+      educationCondition: "None.",
+      incomeCondition: "NFSA ration card holder.",
+      benefit: "5 kg wheat/rice FREE per person per month above regular NFSA entitlement. No cost to beneficiary.",
+      sourceUrl: "https://dfpd.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [],
+      requiredDocuments: [{ id: 2301, documentType: "RATION_CARD", documentName: "NFSA Ration Card (AAY / PHH)", purpose: "Beneficiary identification", requiredFlag: true, issuingAuthority: "Food & Civil Supplies Dept" }],
+      applicationGuides: [{ stepNumber: 1, title: "Collect from Fair Price Shop", instruction: "Collect free grain from your designated FPS ration shop using your Aadhaar-linked ration card.", sourceUrl: "https://dfpd.gov.in" }]
+    },
+    {
+      id: 24,
+      name: "Maharashtra Ladki Bahin Yojana",
+      description: "State flagship DBT scheme providing monthly financial assistance to eligible women of Maharashtra aged 21-65 years to promote financial independence.",
+      category: "WELFARE",
+      governmentLevel: "STATE",
+      state: "Maharashtra",
+      targetBeneficiaries: "Women aged 21-65 years domiciled in Maharashtra with family income up to ₹2,50,000.",
+      ageCondition: "21 to 65 years.",
+      educationCondition: "None.",
+      incomeCondition: "Annual family income up to ₹2,50,000.",
+      benefit: "₹1,500 per month directly to Aadhaar-linked bank account (₹18,000 per year).",
+      sourceUrl: "https://ladakibahin.maharashtra.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [
+        { field: "category", operator: "IN", value: "GENERAL_CITIZEN,FARMER", description: "Woman resident of Maharashtra aged 21-65", required: true },
+        { field: "state", operator: "EQUALS", value: "Maharashtra", description: "Domicile of Maharashtra", required: true },
+        { field: "incomerange", operator: "IN", value: "BELOW_1_LAKH,BELOW_2_LAKH,BELOW_3_LAKH", description: "Family income below ₹2.5 Lakh", required: true }
+      ],
+      requiredDocuments: [
+        { id: 2501, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card of applicant woman", purpose: "Identity & DBT", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 2502, documentType: "DOMICILE_CERTIFICATE", documentName: "Maharashtra Domicile Certificate", purpose: "State residency", requiredFlag: true, issuingAuthority: "Tehsildar" },
+        { id: 2503, documentType: "INCOME_CERTIFICATE", documentName: "Income Certificate (below ₹2.5 Lakh)", purpose: "Income eligibility", requiredFlag: true, issuingAuthority: "Tehsildar" },
+        { id: 2504, documentType: "BANK_PASSBOOK", documentName: "Bank Account linked to Aadhaar", purpose: "Monthly DBT transfer", requiredFlag: true, issuingAuthority: "Bank" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Apply via Aaple Sarkar or Anganwadi Centre", instruction: "Fill application at nearest Anganwadi Centre, Gram Panchayat, or online on Aaple Sarkar portal.", sourceUrl: "https://ladakibahin.maharashtra.gov.in" }]
+    },
+    {
+      id: 25,
+      name: "Gharkul Yojana — Ramai Awas Gharkul (Maharashtra SC/ST Housing)",
+      description: "State government free housing scheme for SC, ST, VJ/NT families in rural Maharashtra providing pucca house construction assistance.",
+      category: "WELFARE",
+      governmentLevel: "STATE",
+      state: "Maharashtra",
+      targetBeneficiaries: "SC/ST/VJ-NT families in rural Maharashtra who are houseless or living in kutcha structures with income below ₹1 Lakh.",
+      ageCondition: "Adult head of household (18+).",
+      educationCondition: "None.",
+      incomeCondition: "Annual family income below ₹1,00,000.",
+      benefit: "₹1,32,000 to ₹1,42,000 per unit housing grant in installments. Additional ₹12,000 for toilet under SBM.",
+      sourceUrl: "https://mahasrd.maharashtra.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [
+        { field: "state", operator: "EQUALS", value: "Maharashtra", description: "Resident of Maharashtra", required: true },
+        { field: "incomerange", operator: "IN", value: "BELOW_1_LAKH,BELOW_2_LAKH", description: "Below ₹1 Lakh income", required: true }
+      ],
+      requiredDocuments: [
+        { id: 2601, documentType: "CASTE_CERTIFICATE", documentName: "Caste Certificate (SC/ST/VJNT)", purpose: "Category eligibility", requiredFlag: true, issuingAuthority: "SDO" },
+        { id: 2602, documentType: "INCOME_CERTIFICATE", documentName: "Income Certificate", purpose: "Below ₹1 Lakh", requiredFlag: true, issuingAuthority: "Tehsildar" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Apply at Gram Panchayat / Block Office", instruction: "Submit application to Gram Panchayat Secretary who forwards to BDO with all documents.", sourceUrl: "https://mahasrd.maharashtra.gov.in" }]
+    },
+    {
+      id: 26,
+      name: "Pradhan Mantri Kaushal Vikas Yojana 4.0 (PMKVY)",
+      description: "Flagship free skill training scheme providing certified training and monetary rewards to youth for industry-recognized short-term courses to enhance employability.",
+      category: "EDUCATION",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Youth (Class 10 dropout or above) aged 15-45 seeking skill development and employment.",
+      ageCondition: "15 to 45 years.",
+      educationCondition: "Minimum Class 10 pass or school dropout.",
+      incomeCondition: "None.",
+      benefit: "FREE certified skill training (3-12 months), monetary reward ₹500 to ₹7,500 on assessment pass, job placement support.",
+      sourceUrl: "https://www.pmkvyofficial.org",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "STUDENT,GENERAL_CITIZEN", description: "Unemployed youth 15-45 years", required: true }],
+      requiredDocuments: [
+        { id: 2701, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "Registration", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 2702, documentType: "EDUCATION_CERTIFICATE", documentName: "10th / School Leaving Certificate", purpose: "Qualification proof", requiredFlag: true, issuingAuthority: "State Board" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Find Training Centre on PMKVY Portal", instruction: "Visit pmkvyofficial.org, select sector/course, find nearest PMKVY training centre.", sourceUrl: "https://www.pmkvyofficial.org" }]
+    },
+    {
+      id: 27,
+      name: "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+      description: "Conditional maternity benefit programme providing ₹5,000 wage compensation to pregnant and lactating women for first living child.",
+      category: "WELFARE",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Pregnant and lactating women aged 19+ for first living child (2nd child if girl under PMMVY 2.0).",
+      ageCondition: "19 years and above at pregnancy.",
+      educationCondition: "None.",
+      incomeCondition: "None.",
+      benefit: "₹5,000 in three installments for first child. ₹6,000 for second girl child under PMMVY 2.0.",
+      sourceUrl: "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [],
+      requiredDocuments: [
+        { id: 2801, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card of mother", purpose: "Identity", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 2802, documentType: "MCP_CARD", documentName: "Mother & Child Protection (MCP) Card", purpose: "Pregnancy tracking", requiredFlag: true, issuingAuthority: "ICDS Anganwadi" },
+        { id: 2803, documentType: "BANK_PASSBOOK", documentName: "Bank Account linked to Aadhaar", purpose: "DBT payment", requiredFlag: true, issuingAuthority: "Bank" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Register at Anganwadi / PHC / ASHA", instruction: "Register pregnancy at nearest Anganwadi Centre or Primary Health Centre to initiate PMMVY.", sourceUrl: "https://wcd.nic.in" }]
+    },
+    {
+      id: 28,
+      name: "Pradhan Mantri Employment Generation Programme (PMEGP)",
+      description: "Credit-linked subsidy scheme for micro-enterprises providing 25-35% margin money subsidy on bank loans for new manufacturing and service sector ventures.",
+      category: "BUSINESS",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Unemployed youth, artisans, ex-servicemen, co-operatives setting up micro-enterprises.",
+      ageCondition: "18 years and above.",
+      educationCondition: "8th pass for projects above ₹10 Lakh.",
+      incomeCondition: "None.",
+      benefit: "25-35% margin money subsidy. Projects up to ₹50 Lakh (Manufacturing) / ₹20 Lakh (Service).",
+      sourceUrl: "https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "BUSINESS_OWNER,GENERAL_CITIZEN", description: "New enterprise entrepreneur", required: true }],
+      requiredDocuments: [
+        { id: 2901, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card", purpose: "KYC", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 2902, documentType: "PROJECT_REPORT", documentName: "Detailed Project Report (DPR)", purpose: "Loan assessment", requiredFlag: true, issuingAuthority: "KVIC / DIC" }
+      ],
+      applicationGuides: [
+        { stepNumber: 1, title: "Apply on PMEGP e-Portal", instruction: "Register at kviconline.gov.in/pmegpeportal and submit online application.", sourceUrl: "https://www.kviconline.gov.in/pmegpeportal" },
+        { stepNumber: 2, title: "KVIC / Bank Interview", instruction: "Attend interview at KVIC / KVIB / DIC office and arrange bank loan sanction.", sourceUrl: "https://www.kviconline.gov.in/pmegpeportal" }
+      ]
+    },
+    {
+      id: 29,
+      name: "Mahatma Jyotirao Phule Jan Arogya Yojana (MJPJAY)",
+      description: "Maharashtra state health insurance covering 996 procedures at empanelled hospitals for BPL/AAY/farmer ration card holders with ₹1.5 Lakh annual coverage per family.",
+      category: "HEALTH",
+      governmentLevel: "STATE",
+      state: "Maharashtra",
+      targetBeneficiaries: "Yellow / Saffron / White Ration Card holders in Maharashtra. Also Kishori, Annapurna Yojana beneficiaries.",
+      ageCondition: "No restriction.",
+      educationCondition: "None.",
+      incomeCondition: "Ration card holder or identified beneficiary.",
+      benefit: "Cashless hospitalization ₹1,50,000 per family per year (₹2,50,000 for kidney transplant) at 1000+ hospitals in Maharashtra.",
+      sourceUrl: "https://www.jeevandayee.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [
+        { field: "state", operator: "EQUALS", value: "Maharashtra", description: "Resident of Maharashtra", required: true },
+        { field: "incomerange", operator: "IN", value: "BELOW_1_LAKH,BELOW_2_LAKH,BELOW_3_LAKH", description: "BPL / AAY / farmer ration card holder", required: true }
+      ],
+      requiredDocuments: [
+        { id: 3001, documentType: "RATION_CARD", documentName: "Yellow / Saffron / White Ration Card", purpose: "Beneficiary identification", requiredFlag: true, issuingAuthority: "Food & Civil Supplies Dept, Maharashtra" },
+        { id: 3002, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card of patient", purpose: "Cashless treatment identity", requiredFlag: true, issuingAuthority: "UIDAI" }
+      ],
+      applicationGuides: [{ stepNumber: 1, title: "Go Directly to Empanelled Hospital", instruction: "No pre-registration needed. Visit MJPJAY empanelled hospital with Aadhaar + ration card. Hospital Helpdesk handles real-time authorization.", sourceUrl: "https://www.jeevandayee.gov.in" }]
+    },
+    {
+      id: 30,
+      name: "PM Vishwakarma Scheme",
+      description: "Comprehensive central support for traditional artisans across 18 trades providing recognition, skill upgrades, toolkit grants (₹15,000), and subsidized loans at 5%.",
+      category: "BUSINESS",
+      governmentLevel: "CENTRAL",
+      state: "All India",
+      targetBeneficiaries: "Traditional artisans (Carpenters, Blacksmiths, Potters, Sculptors, Cobblers, Masons, Weavers, Tailors) working with hands and tools.",
+      ageCondition: "18 years and above.",
+      educationCondition: "Engaged in one of 18 specified trades.",
+      incomeCondition: "One member per family; excludes government employees.",
+      benefit: "PM Vishwakarma Certificate, ₹15,000 toolkit grant, skill training with ₹500/day stipend, collateral-free loans up to ₹3 Lakh at 5% interest.",
+      sourceUrl: "https://pmvishwakarma.gov.in",
+      lastVerified: "2026-03-01",
+      active: true, isDemoData: false, verificationStatus: "VERIFIED",
+      rules: [{ field: "category", operator: "IN", value: "BUSINESS_OWNER,GENERAL_CITIZEN", description: "Traditional artisan / craftsman", required: true }],
+      requiredDocuments: [
+        { id: 3101, documentType: "AADHAAR_CARD", documentName: "Aadhaar Card (Biometric verified)", purpose: "Identity and trade verification", requiredFlag: true, issuingAuthority: "UIDAI" },
+        { id: 3102, documentType: "TRADE_PROOF", documentName: "Declaration of practicing traditional trade", purpose: "Gram Panchayat / ULB verification", requiredFlag: true, issuingAuthority: "Gram Panchayat" }
+      ],
+      applicationGuides: [
+        { stepNumber: 1, title: "Biometric Registration at CSC", instruction: "Visit nearest Common Services Centre (CSC) with Aadhaar and bank passbook for biometric registration.", sourceUrl: "https://pmvishwakarma.gov.in" },
+        { stepNumber: 2, title: "3-Tier Verification & Training", instruction: "Complete verification by Gram Panchayat and District Committee, then attend 5-7 day skill training.", sourceUrl: "https://pmvishwakarma.gov.in" }
+      ]
+    }
   ],
 
   updates: [

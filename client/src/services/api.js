@@ -81,7 +81,10 @@ export const aiService = {
 export const updateService = {
   getUpdates: () => api.get('/updates'),
   getLiveTicker: () => api.get('/realtime/live-ticker'),
-  syncLive: () => api.post('/realtime/sync')
+  syncLive: () => api.post('/realtime/sync'),
+  fetchGovSchemes: () => api.post('/realtime/fetch-government-schemes'),
+  getLiveSchemes: (keyword) => api.get(`/realtime/live-schemes?keyword=${keyword || 'scholarship'}`),
+  getLivePIBUpdates: () => api.get('/realtime/live-pib-updates')
 };
 
 export const adminService = {

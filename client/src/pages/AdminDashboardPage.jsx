@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { adminService } from '../services/api';
+import { adminService, updateService } from '../services/api';
 import {
   Shield,
   FileText,
@@ -13,7 +13,11 @@ import {
   Trash2,
   Edit,
   ExternalLink,
-  Award
+  Award,
+  Globe,
+  Database,
+  Loader,
+  RefreshCw
 } from 'lucide-react';
 
 export const AdminDashboardPage = () => {
@@ -25,6 +29,9 @@ export const AdminDashboardPage = () => {
   const [schemes, setSchemes] = useState([]);
   const [activeTab, setActiveTab] = useState('GUIDES'); // GUIDES, SCHEMES, USERS
   const [loading, setLoading] = useState(true);
+  const [fetchingGov, setFetchingGov] = useState(false);
+  const [govFetchResult, setGovFetchResult] = useState(null);
+
 
   // New Guide Form State
   const [showAddGuideModal, setShowAddGuideModal] = useState(false);
@@ -113,6 +120,24 @@ export const AdminDashboardPage = () => {
     }
   };
 
+  const handleFetchGovernmentData = async () => {
+    setFetchingGov(true);
+    setGovFetchResult(null);
+    try {
+      const res = await updateService.fetchGovSchemes();
+      setGovFetchResult({ success: true, message: res.message, data: res.data });
+      // Reload schemes list
+      const schemesRes = await adminService.getSchemes();
+      if (schemesRes.success) setSchemes(schemesRes.data);
+      const statsRes = await adminService.getDashboardStats();
+      if (statsRes.success) setStats(statsRes.data);
+    } catch (e) {
+      setGovFetchResult({ success: false, message: e?.message || 'Government servers temporarily unavailable. All cached data is intact.' });
+    } finally {
+      setFetchingGov(false);
+    }
+  };
+
   return (
     <div style={{ padding: '3rem 0', minHeight: '85vh', backgroundColor: '#f8fafc' }}>
       <div className="container">
@@ -130,12 +155,22 @@ export const AdminDashboardPage = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => setShowAddGuideModal(true)}
-            className="btn btn-primary"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <Plus size={16} /> Add New Document Guide
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleFetchGovernmentData}
+              disabled={fetchingGov}
+              className="btn btn-outline"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', borderColor: '#15803d', color: '#15803d' }}>
+              {fetchingGov ? <Loader size={15} className="animate-spin" /> : <Globe size={15} />}
+              {fetchingGov ? 'Fetching...' : '🌐 Fetch Live Govt Data'}
+            </button>
+            <button
+              onClick={() => setShowAddGuideModal(true)}
+              className="btn btn-primary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Plus size={16} /> Add New Document Guide
+            </button>
+          </div>
         </div>
 
         {/* Metric Cards */}
@@ -167,6 +202,31 @@ export const AdminDashboardPage = () => {
               <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ea580c', marginTop: '0.25rem' }}>
                 {stats.totalUsers}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gov Fetch Result Banner */}
+        {govFetchResult && (
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '1rem 1.25rem',
+            borderRadius: '0.75rem', marginBottom: '1.5rem',
+            background: govFetchResult.success ? '#f0fdf4' : '#fffbeb',
+            border: `1px solid ${govFetchResult.success ? '#bbf7d0' : '#fcd34d'}`
+          }}>
+            <Globe size={20} color={govFetchResult.success ? '#15803d' : '#b45309'} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <div style={{ fontWeight: 700, color: govFetchResult.success ? '#15803d' : '#b45309', marginBottom: '0.25rem' }}>
+                {govFetchResult.success ? '✅ Live Government Data Sync Complete' : '⚠️ Partial Sync — Using Cached Data'}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#475569' }}>{govFetchResult.message}</div>
+              {govFetchResult.data && (
+                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.35rem' }}>
+                  Added: <strong>{govFetchResult.data.totalInserted}</strong> new schemes &nbsp;|&nbsp;
+                  Updated: <strong>{govFetchResult.data.totalUpdated}</strong> &nbsp;|&nbsp;
+                  Total in DB: <strong>{govFetchResult.data.totalSchemesInDB}</strong>
+                </div>
+              )}
             </div>
           </div>
         )}

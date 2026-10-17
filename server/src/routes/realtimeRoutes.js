@@ -1,5 +1,6 @@
 import express from 'express';
 import { RealtimeService } from '../services/realtimeService.js';
+import { GovDataService } from '../services/govDataService.js';
 
 const router = express.Router();
 
@@ -12,18 +13,70 @@ router.get('/live-ticker', (req, res) => {
   });
 });
 
-// POST /api/realtime/sync
+// POST /api/realtime/sync — sync local cache
 router.post('/sync', async (req, res) => {
   try {
     const result = await RealtimeService.refreshLiveFeeds();
     return res.json({
       success: true,
-      message: 'Real-time synchronization with government databases completed successfully',
+      message: 'Synchronization completed successfully',
       data: result
     });
   } catch (err) {
     console.error('[Realtime] Sync error:', err);
     return res.status(500).json({ success: false, message: 'Sync error' });
+  }
+});
+
+// POST /api/realtime/fetch-government-schemes — fetch LIVE data from government websites
+// This is the core "real data from government websites" endpoint
+router.post('/fetch-government-schemes', async (req, res) => {
+  try {
+    console.log('[Realtime] Starting live government data fetch...');
+    const report = await GovDataService.fetchAndSync();
+    return res.json({
+      success: true,
+      message: report.summary,
+      data: report
+    });
+  } catch (err) {
+    console.error('[Realtime] Government data fetch error:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Error fetching government data. The servers may be temporarily unavailable. Cached data is still available.',
+      error: err.message
+    });
+  }
+});
+
+// GET /api/realtime/live-schemes?keyword=farmer — search live schemes from MyScheme API
+router.get('/live-schemes', async (req, res) => {
+  try {
+    const keyword = req.query.keyword || 'scholarship';
+    const schemes = await GovDataService.getLiveSchemes(keyword);
+    return res.json({
+      success: true,
+      message: `Found ${schemes.length} live schemes for keyword: ${keyword}`,
+      data: schemes,
+      source: 'MyScheme.gov.in (Live)'
+    });
+  } catch (err) {
+    console.error('[Realtime] Live schemes error:', err);
+    return res.status(500).json({ success: false, message: 'Error fetching live schemes' });
+  }
+});
+
+// GET /api/realtime/live-pib-updates — fetch latest PIB press releases
+router.get('/live-pib-updates', async (req, res) => {
+  try {
+    const updates = await GovDataService.getLiveUpdates();
+    return res.json({
+      success: true,
+      data: updates,
+      source: 'PIB - Press Information Bureau (Live)'
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Error fetching PIB updates' });
   }
 });
 
