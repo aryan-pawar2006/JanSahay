@@ -1,19 +1,16 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "jansahay-fullstack",
+  "version": "1.0.0",
+  "description": "JanSahay AI - Smart Document Guidance & Government Scheme Discovery System",
   "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
-  },
-  "private": true,
-  "dependencies": {
-    "@replit/connectors-sdk": "^0.4.3"
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "npm install && npm run install:server && npm run install:client",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "node start-dev.js"
   },
   "devDependencies": {
-    "prettier": "^3.9.6",
-    "typescript": "~5.9.3"
+    "concurrently": "^8.2.2"
   }
 }
