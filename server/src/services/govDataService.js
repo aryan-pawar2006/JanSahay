@@ -32,7 +32,7 @@ async function safeFetch(url, opts = {}) {
 }
 
 function nextId(collection) {
-  const existing = db.getAll(collection);
+  const existing = db.find(collection);
   if (!existing || existing.length === 0) return 1;
   return Math.max(...existing.map(x => x.id || 0)) + 1;
 }
@@ -58,6 +58,7 @@ function upsertUpdate(update) {
     db.insert('updates', { ...update, id });
   }
 }
+
 
 // ── Source 1: MyScheme public search API ─────────────────────────────────────
 
@@ -368,7 +369,7 @@ export class GovDataService {
       report.errors.push(`data.gov.in: ${e.message}`);
     }
 
-    const totalSchemes = (db.getAll('schemes') || []).length;
+    const totalSchemes = (db.find('schemes') || []).length;
     report.totalSchemesInDB = totalSchemes;
     report.summary = `Successfully fetched from ${Object.keys(report.sources).length} government data sources. ${report.totalInserted} new schemes added, ${report.totalUpdated} updated. Total in database: ${totalSchemes} schemes.`;
 

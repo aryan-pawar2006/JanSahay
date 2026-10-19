@@ -51,7 +51,7 @@ export class AIService {
     }
 
     // Add all schemes summary for general questions
-    const allSchemes = db.getAll('schemes') || [];
+    const allSchemes = db.find('schemes') || [];
     if (!schemeId && allSchemes.length) {
       ctx += `\nAVAILABLE SCHEMES IN DATABASE (${allSchemes.length} total):\n`;
       allSchemes.slice(0, 20).forEach(s => {
@@ -60,7 +60,7 @@ export class AIService {
     }
 
     // Add doc guides
-    const guides = db.getAll('documentGuides') || [];
+    const guides = db.find('documentGuides') || [];
     if (guides.length) {
       ctx += `\nDOCUMENT GUIDES (${guides.length} guides available):\n`;
       guides.forEach(g => {
@@ -80,8 +80,8 @@ export class AIService {
   static generateDeterministicAnswer(question, schemeId, language = 'en', userProfile = null) {
     const q = question.toLowerCase().trim();
     const scheme = schemeId ? db.findById('schemes', schemeId) : null;
-    const allSchemes = db.getAll('schemes') || [];
-    const guides = db.getAll('documentGuides') || [];
+    const allSchemes = db.find('schemes') || [];
+    const guides = db.find('documentGuides') || [];
 
     // ── Language detection ──────────────────────────────────────────────────
     const isMarathi = language === 'mr' || q.includes('मराठी') || q.includes('marathi') ||

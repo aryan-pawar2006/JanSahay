@@ -1841,55 +1841,27 @@
     {
       "id": 27,
       "name": "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
-      "description": "Conditional maternity benefit programme providing ₹5,000 wage compensation to pregnant and lactating women for first living child.",
+      "description": "Pradhan Mantri Matru Vandana Yojana (PMMVY) - Official Government Scheme",
       "category": "WELFARE",
       "governmentLevel": "CENTRAL",
       "state": "All India",
-      "targetBeneficiaries": "Pregnant and lactating women aged 19+ for first living child (2nd child if girl under PMMVY 2.0).",
+      "targetBeneficiaries": "As per official eligibility criteria",
       "ageCondition": "19 years and above at pregnancy.",
       "educationCondition": "None.",
       "incomeCondition": "None.",
-      "benefit": "₹5,000 in three installments for first child. ₹6,000 for second girl child under PMMVY 2.0.",
-      "sourceUrl": "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana",
-      "lastVerified": "2026-03-01",
+      "benefit": "As per official scheme guidelines — visit the official portal for latest benefit amounts.",
+      "sourceUrl": "https://www.myscheme.gov.in/schemes/pmmvy",
+      "lastVerified": "2026-10-19",
       "active": true,
       "isDemoData": false,
-      "verificationStatus": "VERIFIED",
+      "verificationStatus": "LIVE_SCRAPED",
       "rules": [],
-      "requiredDocuments": [
-        {
-          "id": 2801,
-          "documentType": "AADHAAR_CARD",
-          "documentName": "Aadhaar Card of mother",
-          "purpose": "Identity",
-          "requiredFlag": true,
-          "issuingAuthority": "UIDAI"
-        },
-        {
-          "id": 2802,
-          "documentType": "MCP_CARD",
-          "documentName": "Mother & Child Protection (MCP) Card",
-          "purpose": "Pregnancy tracking",
-          "requiredFlag": true,
-          "issuingAuthority": "ICDS Anganwadi"
-        },
-        {
-          "id": 2803,
-          "documentType": "BANK_PASSBOOK",
-          "documentName": "Bank Account linked to Aadhaar",
-          "purpose": "DBT payment",
-          "requiredFlag": true,
-          "issuingAuthority": "Bank"
-        }
-      ],
-      "applicationGuides": [
-        {
-          "stepNumber": 1,
-          "title": "Register at Anganwadi / PHC / ASHA",
-          "instruction": "Register pregnancy at nearest Anganwadi Centre or Primary Health Centre to initiate PMMVY.",
-          "sourceUrl": "https://wcd.nic.in"
-        }
-      ]
+      "requiredDocuments": [],
+      "applicationGuides": [],
+      "source": "www.myscheme.gov.in",
+      "scrapedAt": "2026-10-19T06:56:50.306Z",
+      "lastFetched": "2026-10-19T06:57:03.223Z",
+      "updatedAt": "2026-10-19T06:57:03.223Z"
     },
     {
       "id": 28,
@@ -2068,6 +2040,52 @@
           "sourceUrl": "https://pmvishwakarma.gov.in"
         }
       ]
+    },
+    {
+      "name": "MahaDBT Scholarship Portal (Maharashtra)",
+      "description": "MahaDBT Scholarship Portal (Maharashtra) - Official Government Scheme",
+      "benefit": "This facility for opening of accounts in IPPB with Aadhaar seeding is available for receiving DBT benefits for other students and public as well. The account opening is done in real time and in a paperless manner.",
+      "category": "EDUCATION",
+      "governmentLevel": "STATE",
+      "state": "Maharashtra",
+      "targetBeneficiaries": "As per official eligibility criteria",
+      "sourceUrl": "https://mahadbt.maharashtra.gov.in/",
+      "lastVerified": "2026-10-19",
+      "active": true,
+      "isDemoData": false,
+      "verificationStatus": "LIVE_SCRAPED",
+      "source": "mahadbt.maharashtra.gov.in",
+      "rules": [],
+      "requiredDocuments": [],
+      "applicationGuides": [],
+      "scrapedAt": "2026-10-19T06:56:50.427Z",
+      "id": 31,
+      "lastFetched": "2026-10-19T06:57:03.233Z",
+      "createdAt": "2026-10-19T06:57:03.233Z",
+      "updatedAt": "2026-10-19T06:57:03.233Z"
+    },
+    {
+      "name": "National Scholarship Portal (NSP)",
+      "description": "NSP: National Scholarship Portal",
+      "benefit": "As per official scheme guidelines — visit the official portal for latest benefit amounts.",
+      "category": "EDUCATION",
+      "governmentLevel": "CENTRAL",
+      "state": "All India",
+      "targetBeneficiaries": "As per official eligibility criteria",
+      "sourceUrl": "https://nsp.gov.in/",
+      "lastVerified": "2026-10-19",
+      "active": true,
+      "isDemoData": false,
+      "verificationStatus": "LIVE_SCRAPED",
+      "source": "nsp.gov.in",
+      "rules": [],
+      "requiredDocuments": [],
+      "applicationGuides": [],
+      "scrapedAt": "2026-10-19T06:57:03.221Z",
+      "id": 32,
+      "lastFetched": "2026-10-19T06:57:03.236Z",
+      "createdAt": "2026-10-19T06:57:03.236Z",
+      "updatedAt": "2026-10-19T06:57:03.236Z"
     }
   ],
   "documentGuides": [
