@@ -121,7 +121,9 @@ export const SchemeDetailPage = () => {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Printed On: {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#15803d' }}>Status: Verified Official Record</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: scheme.verificationStatus === 'VERIFIED' ? '#15803d' : '#475569' }}>
+                Status: {scheme.verificationStatus === 'VERIFIED' ? 'Verified Official Record' : (scheme.verificationStatus || 'Official Portal Record')}
+              </div>
             </div>
           </div>
         </div>
@@ -183,7 +185,7 @@ export const SchemeDetailPage = () => {
                 </a>
               </div>
               <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.35rem' }}>
-                Verified on: {scheme.lastVerified || 'March 2026'}
+                {scheme.lastVerified ? `Verified on: ${scheme.lastVerified}` : (scheme.dataStatus === 'LIVE' ? 'Live Official Feed' : 'Official Portal Record')}
               </div>
             </div>
           </div>

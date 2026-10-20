@@ -67,10 +67,37 @@ class Database {
 
   save() {
     try {
-      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+      // Atomic write: write to a temporary file then rename to reduce corruption risk
+      const tmpFile = `${DB_FILE}.${Date.now()}.tmp`;
+      fs.writeFileSync(tmpFile, JSON.stringify(this.data, null, 2), 'utf-8');
+      fs.renameSync(tmpFile, DB_FILE);
     } catch (err) {
       console.error('[DB] Save error:', err);
+      // Fallback direct write if rename fails across partitions
+      try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+      } catch (fallbackErr) {
+        console.error('[DB] Critical save error:', fallbackErr);
+      }
     }
+  }
+
+  backup() {
+    try {
+      const backupDir = path.join(DATA_DIR, 'backups');
+      if (!fs.existsSync(backupDir)) {
+        fs.mkdirSync(backupDir, { recursive: true });
+      }
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const backupPath = path.join(backupDir, `jansahay-db-${timestamp}.json`);
+      if (fs.existsSync(DB_FILE)) {
+        fs.copyFileSync(DB_FILE, backupPath);
+        return backupPath;
+      }
+    } catch (err) {
+      console.warn('[DB] Backup creation failed:', err.message);
+    }
+    return null;
   }
 
   // --- Generic Helpers ---
@@ -133,3 +160,4 @@ class Database {
 }
 
 export const db = new Database();
+export default db;

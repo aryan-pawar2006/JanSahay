@@ -131,8 +131,18 @@ export const SchemesCatalogPage = () => {
                     <span className="badge" style={{ background: '#eff6ff', color: '#1e40af', border: '1px solid #bfdbfe', fontSize: '0.7rem' }}>
                       {s.governmentLevel} • {s.state || 'All India'}
                     </span>
-                    <span className="badge badge-verified" style={{ fontSize: '0.7rem' }}>
-                      ✓ Verified Source
+                    <span 
+                      className={`badge ${s.verificationStatus === 'VERIFIED' ? 'badge-verified' : ''}`}
+                      style={{ 
+                        fontSize: '0.7rem',
+                        background: s.verificationStatus === 'VERIFIED' ? '#f0fdf4' : '#f8fafc',
+                        color: s.verificationStatus === 'VERIFIED' ? '#166534' : '#475569',
+                        border: `1px solid ${s.verificationStatus === 'VERIFIED' ? '#bbf7d0' : '#e2e8f0'}`
+                      }}
+                    >
+                      {s.verificationStatus === 'VERIFIED' 
+                        ? '✓ Verified Source' 
+                        : (s.dataStatus === 'LIVE' ? '● Live Official Data' : 'Official Record')}
                     </span>
                   </div>
 

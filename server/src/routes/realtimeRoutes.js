@@ -53,16 +53,30 @@ router.post('/fetch-government-schemes', async (req, res) => {
 router.get('/live-schemes', async (req, res) => {
   try {
     const keyword = req.query.keyword || 'scholarship';
-    const schemes = await GovDataService.getLiveSchemes(keyword);
+    const result = await GovDataService.queryMyScheme([keyword]);
     return res.json({
       success: true,
-      message: `Found ${schemes.length} live schemes for keyword: ${keyword}`,
-      data: schemes,
+      message: `Found ${result.items?.length || 0} live schemes for keyword: ${keyword}`,
+      data: result.items || [],
+      report: result.report,
       source: 'MyScheme.gov.in (Live)'
     });
   } catch (err) {
     console.error('[Realtime] Live schemes error:', err);
     return res.status(500).json({ success: false, message: 'Error fetching live schemes' });
+  }
+});
+
+// GET /api/realtime/sources-health — check status of official portals
+router.get('/sources-health', async (req, res) => {
+  try {
+    const health = await GovDataService.checkSourcesHealth();
+    return res.json({
+      success: true,
+      data: health
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Error checking source health' });
   }
 });
 

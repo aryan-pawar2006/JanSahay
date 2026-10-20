@@ -31,6 +31,24 @@
       "passwordHash": "$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1l5pZ2Tz4qC1l5pZ2Tz4qC1l5pZ2Tz",
       "role": "CITIZEN",
       "createdAt": "2026-03-01T14:20:00.000Z"
+    },
+    {
+      "name": "aryan Pawar",
+      "email": "aryanpawar03022006@gmail.com",
+      "passwordHash": "$2a$10$giXkq0/8T/HynLQlCntOgudxbU6R2h2.gbDq48WAVxLp2/PhfaQXa",
+      "role": "CITIZEN",
+      "id": 5,
+      "createdAt": "2026-10-19T13:04:09.705Z",
+      "updatedAt": "2026-10-19T13:04:09.705Z"
+    },
+    {
+      "name": "Pawar",
+      "email": "aryanpawar#123@gmail.com",
+      "passwordHash": "$2a$10$7k41Y.VYYNf5Dn7JKhTDo.HRDXXa.uTEdxi6zfgRop4uhAahwBB1m",
+      "role": "CITIZEN",
+      "id": 6,
+      "createdAt": "2026-10-20T19:50:31.563Z",
+      "updatedAt": "2026-10-20T19:50:31.563Z"
     }
   ],
   "profiles": [
@@ -60,7 +78,7 @@
     {
       "id": 2,
       "userId": 3,
-      "category": "FARMER",
+      "category": "JOB_SEEKER",
       "state": "Maharashtra",
       "district": "Satara",
       "occupation": "Farmer",
@@ -78,7 +96,7 @@
       "msmeStatus": null,
       "businessDescription": null,
       "profileComplete": true,
-      "updatedAt": "2026-03-12T10:00:00.000Z"
+      "updatedAt": "2026-10-20T19:52:50.034Z"
     },
     {
       "id": 3,
@@ -102,6 +120,54 @@
       "businessDescription": "Organic direct-to-consumer farm produce aggregation and packaging",
       "profileComplete": true,
       "updatedAt": "2026-03-15T15:30:00.000Z"
+    },
+    {
+      "userId": 5,
+      "category": "STUDENT",
+      "state": "Maharashtra",
+      "district": "Satara",
+      "occupation": "Student",
+      "incomeRange": "BELOW_1_LAKH",
+      "educationLevel": "UNDERGRADUATE",
+      "course": "B.Tech Computer Engineering",
+      "currentYear": 3,
+      "instituteName": "Government College of Engineering, Pune (COEP)",
+      "farmingType": "CROP_FARMING",
+      "cropActivity": "Sugarcane, Wheat and Vegetables",
+      "landArea": 3.5,
+      "landOwnership": "OWNED",
+      "businessType": "Food Processing / Tech Startup",
+      "businessStage": "STARTUP",
+      "msmeStatus": "REGISTERED",
+      "businessDescription": "Micro agro-processing enterprise",
+      "profileComplete": true,
+      "updatedAt": "2026-10-19T13:04:40.140Z",
+      "id": 4,
+      "createdAt": "2026-10-19T13:04:40.140Z"
+    },
+    {
+      "userId": 6,
+      "category": "STUDENT",
+      "state": "Maharashtra",
+      "district": "Pune",
+      "occupation": "Student",
+      "incomeRange": "BELOW_2_LAKH",
+      "educationLevel": "UNDERGRADUATE",
+      "course": "B.Tech Computer Engineering",
+      "currentYear": 3,
+      "instituteName": "Government College of Engineering, Pune (COEP)",
+      "farmingType": "CROP_FARMING",
+      "cropActivity": "Sugarcane, Wheat and Vegetables",
+      "landArea": 3.5,
+      "landOwnership": "OWNED",
+      "businessType": "Food Processing / Tech Startup",
+      "businessStage": "STARTUP",
+      "msmeStatus": "REGISTERED",
+      "businessDescription": "Micro agro-processing enterprise",
+      "profileComplete": true,
+      "updatedAt": "2026-10-20T19:50:39.782Z",
+      "id": 5,
+      "createdAt": "2026-10-20T19:50:39.782Z"
     }
   ],
   "schemes": [
@@ -117,7 +183,7 @@
       "educationCondition": "Admitted to Diploma, Degree, or Postgraduate course through Centralized Admission Process (CAP).",
       "incomeCondition": "Annual family income must not exceed ₹8,00,000 per annum.",
       "benefit": "50% of Tuition Fee and Exam Fee reimbursement for general open category with income up to ₹8 Lakhs.",
-      "sourceUrl": "https://mahadbt.maharashtra.gov.in",
+      "sourceUrl": "https://mahadbt.maharashtra.gov.in/",
       "lastVerified": "2026-03-01",
       "active": true,
       "isDemoData": false,
@@ -219,7 +285,11 @@
           "instruction": "Upload verified Income Certificate, Domicile, and CAP allotment letter. Submit for College scrutiny.",
           "sourceUrl": "https://mahadbt.maharashtra.gov.in"
         }
-      ]
+      ],
+      "dataStatus": "LIVE",
+      "lastFetchedAt": "2026-10-20T15:20:42.890Z",
+      "portalStatus": "ONLINE",
+      "updatedAt": "2026-10-20T15:20:42.891Z"
     },
     {
       "id": 2,
@@ -400,7 +470,10 @@
           "instruction": "Ensure biometric or facial OTP e-KYC is completed for installment release.",
           "sourceUrl": "https://pmkisan.gov.in"
         }
-      ]
+      ],
+      "dataStatus": "CACHED",
+      "portalStatus": "UNREACHABLE",
+      "updatedAt": "2026-10-20T15:20:42.773Z"
     },
     {
       "id": 4,
@@ -1355,7 +1428,7 @@
       "educationCondition": "Class 1 to Postgraduate courses.",
       "incomeCondition": "₹2.5 Lakh (SC/ST) to ₹8 Lakh (OBC/Minority) depending on scheme.",
       "benefit": "₹230 to ₹1,200/month maintenance + full tuition fees depending on institution and course.",
-      "sourceUrl": "https://scholarships.gov.in",
+      "sourceUrl": "https://nsp.gov.in/",
       "lastVerified": "2026-03-01",
       "active": true,
       "isDemoData": false,
@@ -1415,7 +1488,11 @@
           "instruction": "Enter course, institution, income details and upload documents before October 31 deadline.",
           "sourceUrl": "https://scholarships.gov.in"
         }
-      ]
+      ],
+      "dataStatus": "LIVE",
+      "lastFetchedAt": "2026-10-20T15:20:49.818Z",
+      "portalStatus": "ONLINE",
+      "updatedAt": "2026-10-20T15:20:49.818Z"
     },
     {
       "id": 19,
