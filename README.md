@@ -6,10 +6,14 @@ An AI-assisted, citizen-centric full-stack platform built with **Java 17, Spring
 
 ## 🚀 Key Features
 
-- **🔍 Intelligent Scheme Discovery:** Explore 30+ verified central and Maharashtra state schemes categorized across Education, Agriculture, Business, Healthcare, Housing, and Social Welfare.
+- **🔍 Intelligent Scheme Discovery & Real-Time Sync:** Explore 40+ verified central and state government schemes (education, agriculture, healthcare, housing, social welfare) with dynamic syncing from official government portals (`myscheme.gov.in`, `data.gov.in`, `mahadbt.maharashtra.gov.in`, `aaplesarkar.mahaonline.gov.in`).
 - **🎯 Deterministic Eligibility Engine:** Evaluates citizen profiles (Age, Category, Income, Domicile, Occupation, Landholding) with explainable condition-by-condition match reports (Strong Match, Potential Match, Missing Info).
-- **📋 Smart Document Guidance:** Comprehensive acquisition guides for essential certificates (Income, Domicile, Caste, Non-Creamy Layer, 7/12 & 8A, Udyam MSME, Ration Card) with statutory timelines under the Maharashtra Right to Services (RTS) Act.
-- **🤖 Grounded Multilingual AI Assistant:** Context-aware assistant grounded in official gazettes and policy resolutions with failsafe fallbacks.
+- **📑 Citizen In-Hand Document Registry:** During registration and profile management, citizens register documents already in hand. When viewing any scheme, the platform automatically separates:
+  - **Section A:** Documents Completed & Ready in Hand (with green badge).
+  - **Section B:** Still Needed Documents (deduplicated, with 1-click step-by-step official acquisition guides).
+- **🏛️ Direct Government Application Portals:** 1-click direct redirection buttons (`Apply Officially on Govt Portal`) linking straight to verified sanctioning authority websites.
+- **📋 Step-by-Step Document Generation Guides:** Detailed modals for all certificates (Income, Domicile, Caste, Non-Creamy Layer, 7/12 & 8A extracts, UDID, Ration Card) complete with prerequisites checklist, numbered workflow steps, statutory RTS timelines, fees, and official issuing portals.
+- **🤖 Grounded Multilingual AI Assistant:** Minimalist, uncluttered conversational assistant trained on 50+ citizen scenarios (7/12 vs Ferfar mutation, caste validity lifetime rules, scholarship disbursement delays, fee overcharging complaints, landless farm laborer welfare, Aadhaar OTP and NPCI DBT seeding) with one-click **"💬 Ask AI About This Scheme"** buttons.
 - **🛡️ Enterprise Security:** Stateless JWT bearer token authentication, BCrypt password encryption (strength 12), and role-based access control (`CITIZEN` vs `ADMIN`).
 
 ---
