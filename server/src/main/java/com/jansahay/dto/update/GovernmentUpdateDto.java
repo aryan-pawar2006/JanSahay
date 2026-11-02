@@ -11,5 +11,6 @@ public class GovernmentUpdateDto {
     private String sourceUrl;
     private LocalDate publishedDate;
     private String relevanceTags;
+    private String dataStatus;
     private Boolean active;
 }

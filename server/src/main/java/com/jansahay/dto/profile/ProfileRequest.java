@@ -8,6 +8,8 @@ public class ProfileRequest {
     private String district;
     private String occupation;
     private IncomeRange incomeRange;
+    // In-hand documentation inventory
+    private java.util.List<String> inHandDocuments;
     // Education fields
     private EducationLevel educationLevel;
     private String course;

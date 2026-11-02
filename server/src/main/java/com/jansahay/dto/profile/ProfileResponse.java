@@ -12,6 +12,8 @@ public class ProfileResponse {
     private String occupation;
     private IncomeRange incomeRange;
     private Boolean profileComplete;
+    private java.util.List<String> inHandDocuments;
+    private Integer inHandDocumentsCount;
     // Education fields
     private EducationLevel educationLevel;
     private String course;

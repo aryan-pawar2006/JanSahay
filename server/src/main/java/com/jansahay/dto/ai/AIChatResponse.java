@@ -6,4 +6,8 @@ public class AIChatResponse {
     private boolean aiAvailable;
     private String provider;
     private String disclaimer;
+    private java.util.List<String> sources;
+    private String dataStatus;
+    private String officialUrl;
+    private String language;
 }

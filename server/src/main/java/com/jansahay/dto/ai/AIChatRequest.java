@@ -7,4 +7,5 @@ public class AIChatRequest {
     private String question;
     private Long schemeId;
     private String context;
+    private String language;
 }

@@ -33,6 +33,11 @@ public class UserProfile {
     private IncomeRange incomeRange;
     
     private Boolean profileComplete;
+
+    @Column(length = 4000)
+    private String inHandDocuments;
+
+    private Integer inHandDocumentsCount;
     
     @CreationTimestamp
     private LocalDateTime createdAt;

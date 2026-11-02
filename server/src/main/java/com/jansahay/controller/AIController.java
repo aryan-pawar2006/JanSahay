@@ -18,14 +18,14 @@ public class AIController {
 
     @PostMapping("/chat")
     public ResponseEntity<ApiResponse<AIChatResponse>> chat(@Valid @RequestBody AIChatRequest request) {
-        Long userId = securityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserIdOrNull();
         AIChatResponse response = aiService.answerQuestion(userId, request);
         return ResponseEntity.ok(ApiResponse.success("Response generated", response));
     }
 
     @PostMapping("/explain-scheme/{schemeId}")
     public ResponseEntity<ApiResponse<AIChatResponse>> explainScheme(@PathVariable Long schemeId) {
-        Long userId = securityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserIdOrNull();
         AIChatResponse response = aiService.explainScheme(userId, schemeId);
         return ResponseEntity.ok(ApiResponse.success("Scheme explained", response));
     }

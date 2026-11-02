@@ -28,6 +28,7 @@ public class GovernmentUpdate {
     private String sourceUrl;
     private LocalDate publishedDate;
     private String relevanceTags;
+    private String dataStatus;
     
     @Builder.Default
     private Boolean active = true;

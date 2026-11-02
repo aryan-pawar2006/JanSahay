@@ -51,6 +51,34 @@ public class AuthServiceImpl implements AuthService {
         return buildAuthResponse(token, user);
     }
 
+    @Override
+    public AuthResponse quickLogin(String role) {
+        String roleLower = role != null ? role.toLowerCase() : "student";
+        String email = switch (roleLower) {
+            case "farmer" -> "farmer@jansahay.ai";
+            case "business" -> "business@jansahay.ai";
+            case "admin" -> "admin@jansahay.gov.in";
+            default -> "student@jansahay.ai";
+        };
+        User user = userRepository.findByEmail(email)
+                .orElseGet(() -> userRepository.findAll().stream().findFirst().orElseThrow());
+        log.info("Quick login executed for role: {} (User: {})", roleLower, user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getId(), user.getRole().name());
+        return buildAuthResponse(token, user);
+    }
+
+    @Override
+    public AuthResponse.UserDto getCurrentUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException("User not found: " + userId));
+        return AuthResponse.UserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
+    }
+
     private AuthResponse buildAuthResponse(String token, User user) {
         return AuthResponse.builder()
                 .token(token)

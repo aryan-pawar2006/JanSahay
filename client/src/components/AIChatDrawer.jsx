@@ -112,6 +112,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
   }, [messages, loading, isOpen]);
 
   const quickPrompts = [
+    'Which documents do I currently have in hand?',
     currentScheme ? `Am I eligible for ${currentScheme.name?.split(' ')[0]}?` : 'What schemes are available for students?',
     'How do I obtain an Income Certificate in Maharashtra?',
     'PM-KISAN documents required?',

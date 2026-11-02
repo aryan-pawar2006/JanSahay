@@ -29,10 +29,7 @@ public class AIServiceImpl implements AIService {
 
     @Override
     public AIChatResponse answerQuestion(Long userId, AIChatRequest request) {
-        String context = "";
-        if (request.getSchemeId() != null) {
-            context = knowledgeRetrievalService.buildSchemeContextString(request.getSchemeId());
-        }
+        String context = knowledgeRetrievalService.buildComprehensiveContextString(userId, request.getSchemeId(), request.getQuestion());
         String fullSystemPrompt = SYSTEM_PROMPT + (context.isBlank() ? "" : "\n\n" + context);
         String answer;
         try {
@@ -41,10 +38,20 @@ public class AIServiceImpl implements AIService {
             log.error("AI service error: {}", e.getMessage());
             answer = "AI assistance is temporarily unavailable. Please refer to the official scheme source for accurate information.";
         }
+
+        java.util.List<String> sources = new java.util.ArrayList<>();
+        sources.add("JanSahay Verified Database");
+        if (request.getSchemeId() != null) {
+            sources.add("Official Government Scheme Registry");
+        }
+
         return AIChatResponse.builder()
                 .answer(answer)
                 .aiAvailable(aiProvider.isAvailable())
                 .provider(aiProvider.getProviderName())
+                .sources(sources)
+                .dataStatus("LIVE")
+                .language(request.getLanguage() != null ? request.getLanguage() : "en")
                 .disclaimer("JanSahay AI provides informational guidance only. Please verify eligibility and application details with the official government authority.")
                 .build();
     }

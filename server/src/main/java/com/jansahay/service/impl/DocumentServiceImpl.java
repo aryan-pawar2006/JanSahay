@@ -52,7 +52,7 @@ public class DocumentServiceImpl implements DocumentService {
         Map<String, UserDocument> userDocMap = userDocs.stream()
                 .collect(Collectors.toMap(d -> d.getDocumentName().toLowerCase(), d -> d, (a, b) -> a));
         List<DocumentChecklistResponse.DocumentItemDto> items = required.stream().map(rd -> {
-            UserDocument ud = userDocMap.get(rd.getDocumentName().toLowerCase());
+            UserDocument ud = findMatchingUserDoc(userDocMap, rd.getDocumentName());
             DocumentStatus status = ud != null ? ud.getStatus() : DocumentStatus.NOT_VERIFIED;
             return DocumentChecklistResponse.DocumentItemDto.builder()
                     .requiredDocumentId(rd.getId())
@@ -72,5 +72,22 @@ public class DocumentServiceImpl implements DocumentService {
                 .totalDocuments(required.size()).availableDocuments((int) available)
                 .missingDocuments((int) missing).readinessMessage(readinessMsg)
                 .documents(items).build();
+    }
+
+    private UserDocument findMatchingUserDoc(Map<String, UserDocument> userDocMap, String reqDocName) {
+        if (reqDocName == null) return null;
+        String cleanReq = reqDocName.toLowerCase().trim();
+        if (userDocMap.containsKey(cleanReq)) return userDocMap.get(cleanReq);
+        for (Map.Entry<String, UserDocument> entry : userDocMap.entrySet()) {
+            String key = entry.getKey();
+            if (cleanReq.contains(key) || key.contains(cleanReq)) return entry.getValue();
+            String[] keywords = {"aadhaar", "income", "domicile", "caste", "7/12", "satbara", "ration", "bank", "pan", "bonafide", "marksheet", "allotment", "udyam", "leaving", "photo"};
+            for (String kw : keywords) {
+                if (cleanReq.contains(kw) && key.contains(kw)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

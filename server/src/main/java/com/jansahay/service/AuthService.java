@@ -5,4 +5,6 @@ import com.jansahay.dto.auth.RegisterRequest;
 public interface AuthService {
     AuthResponse register(RegisterRequest request);
     AuthResponse login(LoginRequest request);
+    AuthResponse quickLogin(String role);
+    AuthResponse.UserDto getCurrentUser(Long userId);
 }

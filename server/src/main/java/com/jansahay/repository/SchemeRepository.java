@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 public interface SchemeRepository extends JpaRepository<Scheme, Long> {
     List<Scheme> findByActiveTrue();
+    java.util.Optional<Scheme> findByCode(String code);
+    java.util.Optional<Scheme> findByNameIgnoreCase(String name);
     List<Scheme> findByCategoryAndActiveTrue(SchemeCategory category);
     Page<Scheme> findByActiveTrue(Pageable pageable);
     

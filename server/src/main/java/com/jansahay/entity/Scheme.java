@@ -46,6 +46,11 @@ public class Scheme {
     
     private Boolean isDemoData;
     
+    private String code;
+    private String dataStatus;
+    private String verificationStatus;
+    private LocalDateTime lastFetchedAt;
+    
     @OneToMany(mappedBy = "scheme", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

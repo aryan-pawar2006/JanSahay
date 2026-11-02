@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { schemeService } from '../services/api';
-import { Search, Filter, BookOpen, ArrowRight, ExternalLink } from 'lucide-react';
+import { schemeService, updateService } from '../services/api';
+import { Search, Filter, BookOpen, ArrowRight, ExternalLink, RefreshCw, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const SchemesCatalogPage = () => {
   const [schemes, setSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState(null);
   const [keyword, setKeyword] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
@@ -35,18 +37,77 @@ export const SchemesCatalogPage = () => {
     }
   };
 
+  const handleSyncGovSchemes = async () => {
+    setSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await updateService.fetchGovSchemes();
+      if (res.success) {
+        setSyncMessage(`✓ Live Government Sync Complete! ${res.data?.totalInserted || 0} new schemes added, ${res.data?.totalUpdated || 0} updated.`);
+        await loadSchemes();
+      }
+    } catch (err) {
+      console.error('Error syncing schemes:', err);
+      setSyncMessage('⚠️ Could not connect to external portals. Stored official scheme data is active.');
+    } finally {
+      setSyncing(false);
+      setTimeout(() => setSyncMessage(null), 6000);
+    }
+  };
+
   return (
     <div style={{ padding: '3rem 0', minHeight: '85vh', backgroundColor: '#f8fafc' }}>
       <div className="container">
-        {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>
-            Government Schemes Catalog
-          </h1>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-            Browse verified Central and State government welfare schemes with structured eligibility rules and required document checklists.
-          </p>
+        {/* Header & Live Dynamic Sync Action */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#dbeafe', color: '#1e40af', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <ShieldCheck size={13} /> Official Central & State Government Portals
+            </div>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.35rem' }}>
+              Government Schemes Catalog
+            </h1>
+            <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+              Discover dynamic government welfare schemes with verified eligibility rules and document checklists.
+            </p>
+          </div>
+
+          <button
+            onClick={handleSyncGovSchemes}
+            disabled={syncing}
+            className="btn btn-primary"
+            style={{
+              background: '#15803d',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              whiteSpace: 'nowrap',
+              padding: '0.65rem 1.15rem',
+              boxShadow: '0 2px 4px rgba(21, 128, 61, 0.2)'
+            }}>
+            <RefreshCw size={16} className={syncing ? 'animate-spin' : ''} />
+            {syncing ? 'Fetching Live Govt Schemes...' : 'Fetch Live Govt Schemes (Dynamic Sync)'}
+          </button>
         </div>
+
+        {/* Sync Notification Banner */}
+        {syncMessage && (
+          <div style={{
+            background: syncMessage.startsWith('✓') ? '#f0fdf4' : '#fffbeb',
+            border: `1px solid ${syncMessage.startsWith('✓') ? '#bbf7d0' : '#fef3c7'}`,
+            color: syncMessage.startsWith('✓') ? '#166534' : '#92400e',
+            padding: '0.75rem 1rem',
+            borderRadius: '0.5rem',
+            marginBottom: '1.5rem',
+            fontSize: '0.875rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <CheckCircle2 size={16} /> {syncMessage}
+          </div>
+        )}
 
         {/* Search & Filters */}
         <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem' }}>

@@ -2,7 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { profileService } from '../services/api';
-import { ShieldCheck, User, MapPin, GraduationCap, DollarSign, Briefcase, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { ShieldCheck, User, MapPin, GraduationCap, DollarSign, Briefcase, Sparkles, ArrowRight, Check, FileText, CheckCircle2, Plus, X } from 'lucide-react';
+
+const COMMON_DOCUMENTS = [
+  { name: 'Aadhaar Card', desc: 'UIDAI Identity & Address Proof', category: 'General' },
+  { name: 'Income Certificate', desc: 'Issued by Tahsildar / Revenue Department', category: 'General' },
+  { name: 'Domicile Certificate', desc: 'Age & Domicile Proof (Maharashtra / State)', category: 'General' },
+  { name: 'Bank Passbook', desc: 'Aadhaar-seeded bank account statement', category: 'General' },
+  { name: 'Ration Card', desc: 'BPL / Antyodaya / Yellow / Orange Card', category: 'General' },
+  { name: 'PAN Card', desc: 'Income Tax Identity Document', category: 'General' },
+  { name: 'Caste Certificate', desc: 'SC / ST / OBC / VJNT / SEBC Certificate', category: 'Caste & Social' },
+  { name: 'Caste Validity Certificate', desc: 'Scrutiny Committee Verification', category: 'Caste & Social' },
+  { name: 'Non-Creamy Layer (NCL)', desc: 'Valid Current Financial Year Certificate', category: 'Caste & Social' },
+  { name: 'College Bonafide Certificate', desc: 'Current enrolled student verification', category: 'Education' },
+  { name: 'College Fee Receipt', desc: 'Current academic year fee payment receipt', category: 'Education' },
+  { name: 'CAP Allotment Letter', desc: 'Centralized Admission Process confirmation', category: 'Education' },
+  { name: '10th & 12th Marksheets', desc: 'Board examination academic qualification', category: 'Education' },
+  { name: '7/12 & 8A Land Extract (Satbara)', desc: 'Official digital land ownership record', category: 'Farmer' },
+  { name: 'Crop Sowing Proof (e-Pik Pahani)', desc: 'Digital crop cultivation verification', category: 'Farmer' },
+  { name: 'Udyam Registration Certificate', desc: 'MSME registration certificate', category: 'Business' },
+  { name: 'Disability (UDID) Certificate', desc: 'Unique Disability ID certificate', category: 'Special' },
+  { name: 'Voter ID (EPIC)', desc: 'Election Commission Voter Card', category: 'General' }
+];
 
 export const ProfileWizardPage = () => {
   const { user, isAuthenticated, quickLogin } = useAuth();
@@ -10,12 +31,15 @@ export const ProfileWizardPage = () => {
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [customDocInput, setCustomDocInput] = useState('');
   const [formData, setFormData] = useState({
     category: 'STUDENT',
     state: 'Maharashtra',
     district: 'Pune',
     occupation: 'Student',
     incomeRange: 'BELOW_2_LAKH',
+    // In-hand documentation inventory
+    inHandDocuments: ['Aadhaar Card', 'Income Certificate', 'Domicile Certificate', 'Bank Passbook'],
     // Student specifics
     educationLevel: 'UNDERGRADUATE',
     course: 'B.Tech Computer Engineering',
@@ -38,11 +62,54 @@ export const ProfileWizardPage = () => {
     if (isAuthenticated) {
       profileService.getProfile().then(res => {
         if (res.success && res.data) {
-          setFormData(prev => ({ ...prev, ...res.data }));
+          setFormData(prev => ({
+            ...prev,
+            ...res.data,
+            inHandDocuments: (res.data.inHandDocuments && res.data.inHandDocuments.length > 0)
+              ? res.data.inHandDocuments
+              : prev.inHandDocuments
+          }));
         }
       }).catch(err => console.log('No prior profile'));
     }
   }, [isAuthenticated]);
+
+  const toggleDocument = (docName) => {
+    setFormData(prev => {
+      const exists = prev.inHandDocuments.includes(docName);
+      const updated = exists
+        ? prev.inHandDocuments.filter(d => d !== docName)
+        : [...prev.inHandDocuments, docName];
+      return { ...prev, inHandDocuments: updated };
+    });
+  };
+
+  const addCustomDocument = () => {
+    const trimmed = customDocInput.trim();
+    if (!trimmed) return;
+    if (!formData.inHandDocuments.includes(trimmed)) {
+      setFormData(prev => ({
+        ...prev,
+        inHandDocuments: [...prev.inHandDocuments, trimmed]
+      }));
+    }
+    setCustomDocInput('');
+  };
+
+  const selectAllCategoryDocs = () => {
+    const allNames = COMMON_DOCUMENTS.map(d => d.name);
+    setFormData(prev => ({
+      ...prev,
+      inHandDocuments: Array.from(new Set([...prev.inHandDocuments, ...allNames]))
+    }));
+  };
+
+  const clearAllDocs = () => {
+    setFormData(prev => ({
+      ...prev,
+      inHandDocuments: []
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,6 +173,13 @@ export const ProfileWizardPage = () => {
               style={{ background: 'none', border: 'none', fontWeight: 700, fontSize: '0.85rem', color: step === 3 ? '#1e3a8a' : '#64748b', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}>
               <span style={{ width: '24px', height: '24px', borderRadius: '9999px', background: step === 3 ? '#1e3a8a' : '#e2e8f0', color: step === 3 ? 'white' : '#64748b', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>3</span>
               Category Details
+            </button>
+
+            <button
+              onClick={() => setStep(4)}
+              style={{ background: 'none', border: 'none', fontWeight: 700, fontSize: '0.85rem', color: step === 4 ? '#1e3a8a' : '#64748b', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}>
+              <span style={{ width: '24px', height: '24px', borderRadius: '9999px', background: step === 4 ? '#1e3a8a' : '#e2e8f0', color: step === 4 ? 'white' : '#64748b', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>4</span>
+              Documents In Hand ({formData.inHandDocuments.length})
             </button>
           </div>
 
@@ -434,13 +508,174 @@ export const ProfileWizardPage = () => {
                     Back
                   </button>
                   <button
+                    type="button"
+                    onClick={() => setStep(4)}
+                    className="btn btn-primary"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    Next: Documents In Hand ({formData.inHandDocuments.length}) <ArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Documents In Hand (Citizen Readiness Inventory) */}
+            {step === 4 && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>
+                      Which Documents Do You Have Right Now in Hand?
+                    </h3>
+                    <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                      Select all certificates and identity documents in your possession. JanSahay uses this to calculate your real-time application readiness.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Live In-Hand Counter Banner */}
+                <div style={{
+                  background: '#f0fdf4',
+                  border: '1px solid #bbf7d0',
+                  borderRadius: '0.5rem',
+                  padding: '1rem',
+                  marginBottom: '1.5rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '9999px', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CheckCircle2 size={24} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 800, color: '#166534', fontSize: '1rem' }}>
+                        {formData.inHandDocuments.length} Document{formData.inHandDocuments.length === 1 ? '' : 's'} Ready in Hand
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: '#15803d' }}>
+                        {formData.inHandDocuments.length > 0 
+                          ? `Declared: ${formData.inHandDocuments.slice(0, 3).join(', ')}${formData.inHandDocuments.length > 3 ? ` + ${formData.inHandDocuments.length - 3} more` : ''}` 
+                          : 'No documents selected yet. Click any card below to add.'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      onClick={selectAllCategoryDocs}
+                      style={{ background: '#ffffff', border: '1px solid #86efac', color: '#166534', borderRadius: '0.375rem', padding: '0.35rem 0.65rem', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+                      Select All
+                    </button>
+                    <button
+                      type="button"
+                      onClick={clearAllDocs}
+                      style={{ background: '#ffffff', border: '1px solid #cbd5e1', color: '#64748b', borderRadius: '0.375rem', padding: '0.35rem 0.65rem', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                {/* Document Selection Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem', maxHeight: '380px', overflowY: 'auto', paddingRight: '0.25rem' }}>
+                  {COMMON_DOCUMENTS.map((doc) => {
+                    const isSelected = formData.inHandDocuments.includes(doc.name);
+                    return (
+                      <div
+                        key={doc.name}
+                        onClick={() => toggleDocument(doc.name)}
+                        style={{
+                          border: isSelected ? '2px solid #16a34a' : '1px solid #e2e8f0',
+                          background: isSelected ? '#f0fdf4' : '#ffffff',
+                          borderRadius: '0.5rem',
+                          padding: '0.85rem',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          boxShadow: isSelected ? '0 1px 3px rgba(22, 163, 74, 0.15)' : 'none'
+                        }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.35rem' }}>
+                          <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', padding: '0.15rem 0.4rem', borderRadius: '4px', background: isSelected ? '#dcfce7' : '#f1f5f9', color: isSelected ? '#166534' : '#64748b' }}>
+                            {doc.category}
+                          </span>
+                          <span style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '9999px',
+                            background: isSelected ? '#16a34a' : '#f1f5f9',
+                            color: isSelected ? '#ffffff' : '#94a3b8',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.75rem',
+                            fontWeight: 700
+                          }}>
+                            {isSelected ? '✓' : '+'}
+                          </span>
+                        </div>
+                        <div style={{ fontWeight: 700, fontSize: '0.875rem', color: isSelected ? '#14532d' : '#1e293b', marginBottom: '0.2rem' }}>
+                          {doc.name}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', lineHeight: 1.3 }}>
+                          {doc.desc}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Add Custom In-Hand Document */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', padding: '1rem', marginBottom: '2rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#475569', marginBottom: '0.5rem' }}>
+                    HAVE ANOTHER CERTIFICATE OR DOCUMENT IN HAND?
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      type="text"
+                      placeholder="e.g. Electricity Bill, Gap Certificate, Employer NOC..."
+                      value={customDocInput}
+                      onChange={(e) => setCustomDocInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomDocument(); } }}
+                      style={{ flex: 1, padding: '0.55rem 0.75rem', borderRadius: '0.375rem', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={addCustomDocument}
+                      className="btn btn-outline"
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap' }}>
+                      <Plus size={14} /> Add Document
+                    </button>
+                  </div>
+
+                  {/* Custom Added Badges */}
+                  {formData.inHandDocuments.filter(d => !COMMON_DOCUMENTS.some(c => c.name === d)).length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginTop: '0.75rem' }}>
+                      {formData.inHandDocuments.filter(d => !COMMON_DOCUMENTS.some(c => c.name === d)).map(customDoc => (
+                        <span
+                          key={customDoc}
+                          style={{ background: '#e0e7ff', color: '#3730a3', fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '9999px', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}>
+                          {customDoc}
+                          <X size={12} style={{ cursor: 'pointer' }} onClick={() => toggleDocument(customDoc)} />
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <button type="button" onClick={() => setStep(3)} className="btn btn-outline">
+                    Back to Category Details
+                  </button>
+                  <button
                     type="submit"
                     disabled={loading}
                     className="btn btn-primary"
-                    style={{ background: '#15803d' }}>
+                    style={{ background: '#15803d', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     {loading ? 'Evaluating Rules...' : (
                       <>
-                        <Sparkles size={16} /> Save & Discover Schemes Now
+                        <Sparkles size={16} /> Save Profile & Discover Schemes Now
                       </>
                     )}
                   </button>

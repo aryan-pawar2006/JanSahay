@@ -17,6 +17,10 @@ public class SchemeDto {
     private LocalDate lastVerified;
     private Boolean active;
     private Boolean isDemoData;
+    private String code;
+    private String dataStatus;
+    private String verificationStatus;
+    private LocalDateTime lastFetchedAt;
     private List<EligibilityRuleDto> eligibilityRules;
     private List<RequiredDocumentDto> requiredDocuments;
     private List<ApplicationGuideDto> applicationGuides;

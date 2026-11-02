@@ -54,3 +54,7 @@ server/.env
 
 # Production builds
 client/dist/
+
+target/
+server/target/
+*.log

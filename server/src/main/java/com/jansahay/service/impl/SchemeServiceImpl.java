@@ -103,6 +103,10 @@ public class SchemeServiceImpl implements SchemeService {
                 .category(scheme.getCategory()).benefit(scheme.getBenefit())
                 .sourceUrl(scheme.getSourceUrl()).lastVerified(scheme.getLastVerified())
                 .active(scheme.getActive()).isDemoData(scheme.getIsDemoData())
+                .code(scheme.getCode())
+                .dataStatus(scheme.getDataStatus())
+                .verificationStatus(scheme.getVerificationStatus())
+                .lastFetchedAt(scheme.getLastFetchedAt())
                 .createdAt(scheme.getCreatedAt());
         if (includeDetails) {
             List<EligibilityRule> rules = eligibilityRuleRepository.findBySchemeId(scheme.getId());

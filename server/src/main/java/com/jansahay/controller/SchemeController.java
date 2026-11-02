@@ -15,6 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SchemeController {
     private final SchemeService schemeService;
+    private final com.jansahay.service.GovernmentSyncService governmentSyncService;
+
+    @PostMapping("/sync")
+    public ResponseEntity<ApiResponse<com.jansahay.dto.realtime.GovSyncReportDto>> syncSchemes() {
+        var report = governmentSyncService.fetchAndIngestSchemes();
+        return ResponseEntity.ok(ApiResponse.success(report.getMessage(), report));
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<SchemeDto>>> getSchemes(

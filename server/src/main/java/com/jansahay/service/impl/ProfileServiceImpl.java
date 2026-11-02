@@ -20,6 +20,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final FarmerProfileRepository farmerProfileRepository;
     private final BusinessProfileRepository businessProfileRepository;
     private final UserRepository userRepository;
+    private final UserDocumentRepository userDocumentRepository;
 
     @Override
     public ProfileResponse getProfile(Long userId) {
@@ -39,9 +40,33 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setOccupation(request.getOccupation());
         profile.setIncomeRange(request.getIncomeRange());
         profile.setProfileComplete(isProfileComplete(request));
+
+        // Process and record in-hand documents inventory
+        if (request.getInHandDocuments() != null) {
+            java.util.List<String> cleanDocs = request.getInHandDocuments().stream()
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .distinct()
+                    .collect(java.util.stream.Collectors.toList());
+            profile.setInHandDocuments(String.join("|||", cleanDocs));
+            profile.setInHandDocumentsCount(cleanDocs.size());
+
+            // Sync user_documents table: mark these documents as AVAILABLE
+            for (String docName : cleanDocs) {
+                UserDocument userDoc = userDocumentRepository.findByUserIdAndDocumentName(userId, docName)
+                        .orElse(UserDocument.builder()
+                                .userId(userId)
+                                .documentName(docName)
+                                .documentType(docName.toUpperCase().replace(" ", "_"))
+                                .build());
+                userDoc.setStatus(com.jansahay.enums.DocumentStatus.AVAILABLE);
+                userDocumentRepository.save(userDoc);
+            }
+        }
+
         profile = userProfileRepository.save(profile);
         saveSpecializedProfile(userId, request);
-        log.info("Profile updated for user: {}", userId);
+        log.info("Profile and in-hand documents updated for user: {}", userId);
         return buildProfileResponse(userId, profile);
     }
 
@@ -91,11 +116,21 @@ public class ProfileServiceImpl implements ProfileService {
 
     private ProfileResponse buildProfileResponse(Long userId, UserProfile profile) {
         User user = userRepository.findById(userId).orElseThrow();
+        java.util.List<String> inHandList = new java.util.ArrayList<>();
+        if (profile.getInHandDocuments() != null && !profile.getInHandDocuments().isBlank()) {
+            inHandList = java.util.Arrays.stream(profile.getInHandDocuments().split("\\|\\|\\|"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
         ProfileResponse response = ProfileResponse.builder()
                 .id(profile.getId()).userId(userId).userName(user.getName())
                 .category(profile.getCategory()).state(profile.getState())
                 .district(profile.getDistrict()).occupation(profile.getOccupation())
                 .incomeRange(profile.getIncomeRange()).profileComplete(profile.getProfileComplete())
+                .inHandDocuments(inHandList)
+                .inHandDocumentsCount(profile.getInHandDocumentsCount() != null ? profile.getInHandDocumentsCount() : inHandList.size())
                 .build();
         // Populate specialized profile fields
         if (profile.getCategory() == UserCategory.STUDENT) {
