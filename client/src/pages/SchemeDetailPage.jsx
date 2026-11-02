@@ -23,8 +23,20 @@ import {
   Globe,
   DollarSign,
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Bot
 } from 'lucide-react';
+
+const getHostname = (urlStr) => {
+  try {
+    if (!urlStr) return 'Official Government Portal';
+    const clean = urlStr.trim();
+    const parsed = new URL(clean.startsWith('http://') || clean.startsWith('https://') ? clean : `https://${clean}`);
+    return parsed.hostname;
+  } catch (e) {
+    return 'Official Government Portal';
+  }
+};
 
 export const SchemeDetailPage = () => {
   const { id } = useParams();
@@ -130,11 +142,11 @@ export const SchemeDetailPage = () => {
       estimatedTime: item?.feeAndTimeline?.split('•')[1] || '15 to 21 working days',
       officialUrl: item?.officialPortalUrl || 'https://aaplesarkar.mahaonline.gov.in',
       verificationStatus: 'VERIFIED',
-      prerequisites: item?.prerequisites && item.prerequisites.length > 0
-        ? item.prerequisites
+      prerequisites: item?.prerequisites && (Array.isArray(item.prerequisites) ? item.prerequisites.length > 0 : String(item.prerequisites).trim().length > 0)
+        ? (Array.isArray(item.prerequisites) ? item.prerequisites : [String(item.prerequisites)])
         : ['Aadhaar Card copy', 'Identity Proof', 'Address / Domicile Proof', 'Self-declaration affidavit'],
-      steps: item?.stepByStepProcess && item.stepByStepProcess.length > 0
-        ? item.stepByStepProcess.map((step, idx) => ({
+      steps: item?.stepByStepProcess && (Array.isArray(item.stepByStepProcess) ? item.stepByStepProcess.length > 0 : String(item.stepByStepProcess).trim().length > 0)
+        ? (Array.isArray(item.stepByStepProcess) ? item.stepByStepProcess : [String(item.stepByStepProcess)]).map((step, idx) => ({
             stepNumber: idx + 1,
             title: `Step ${idx + 1}`,
             description: step,
@@ -273,7 +285,7 @@ export const SchemeDetailPage = () => {
               )}
 
               <div style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'right' }}>
-                <div>Verified Portal: <strong>{new URL(scheme.sourceUrl || 'https://myscheme.gov.in').hostname}</strong></div>
+                <div>Verified Portal: <strong>{getHostname(scheme.sourceUrl)}</strong></div>
                 <div>{scheme.lastVerified ? `Verified Date: ${scheme.lastVerified}` : 'Live Synchronized Feed'}</div>
               </div>
             </div>
@@ -579,19 +591,19 @@ export const SchemeDetailPage = () => {
                                       gap: '0.25rem',
                                       textDecoration: 'underline'
                                     }}>
-                                    Open Official Issuing Portal ({new URL(doc.officialPortalUrl).hostname}) <ExternalLink size={12} />
+                                    Open Official Issuing Portal ({getHostname(doc.officialPortalUrl)}) <ExternalLink size={12} />
                                   </a>
                                 )}
                               </div>
 
                               {/* Prerequisites */}
-                              {doc.prerequisites && doc.prerequisites.length > 0 && (
+                              {((Array.isArray(doc.prerequisites) && doc.prerequisites.length > 0) || (typeof doc.prerequisites === 'string' && doc.prerequisites.trim().length > 0)) && (
                                 <div style={{ marginBottom: '1rem', background: '#ffffff', border: '1px solid #fed7aa', padding: '0.75rem', borderRadius: '0.375rem' }}>
                                   <strong style={{ fontSize: '0.75rem', color: '#c2410c', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                     Required Proofs / Prerequisites Needed:
                                   </strong>
                                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginTop: '0.35rem' }}>
-                                    {doc.prerequisites.map((p, pIdx) => (
+                                    {(Array.isArray(doc.prerequisites) ? doc.prerequisites : doc.prerequisites.split(/(?=[A-Z][a-z]+)/).filter(Boolean)).map((p, pIdx) => (
                                       <span key={pIdx} style={{ background: '#ffedd5', color: '#9a3412', fontSize: '0.75rem', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 600 }}>
                                         • {p}
                                       </span>
@@ -602,7 +614,7 @@ export const SchemeDetailPage = () => {
 
                               {/* Step-by-Step Point-Wise Instructions */}
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                                {(doc.stepByStepProcess || [
+                                {(Array.isArray(doc.stepByStepProcess) ? doc.stepByStepProcess : [
                                   `Step 1: Visit the designated issuing authority portal or nearest Citizen Service Center (CSC / Setu).`,
                                   `Step 2: Fill out the application form with accurate identity details.`,
                                   `Step 3: Attach self-attested copies of Aadhaar card and required supporting proofs.`,
