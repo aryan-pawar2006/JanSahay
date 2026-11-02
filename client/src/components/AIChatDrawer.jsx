@@ -112,15 +112,26 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
   }, [messages, loading, isOpen]);
 
   const quickPrompts = [
+    ...(currentScheme ? [
+      `What documents do I still need for this scheme?`,
+      `Am I eligible for ${currentScheme.name?.split(' ')[0]}?`,
+      `How do I apply for ${currentScheme.name?.split(' ')[0]}?`,
+      `Where is the official portal to apply?`
+    ] : [
+      'What schemes are available for engineering students?',
+      'PM-KISAN and Namo Shetkari ₹12,000 details?',
+      'What are the 3 loan categories under Mudra?',
+      'लाडकी बहीण योजनेची माहिती व पात्रता (Ladki Bahin)?'
+    ]),
     'Which documents do I currently have in hand?',
-    currentScheme ? `Am I eligible for ${currentScheme.name?.split(' ')[0]}?` : 'What schemes are available for students?',
     'How do I obtain an Income Certificate in Maharashtra?',
-    'PM-KISAN documents required?',
-    'What business loans are available under Mudra?',
+    'How do I get a digital 7/12 land extract?',
+    'How to apply for Caste Validity on BARTI?',
+    'How to seed bank account with Aadhaar (NPCI DBT)?',
+    'What is Non-Creamy Layer (NCL) and who qualifies?',
+    'Official government welfare helpline numbers?',
     'मराठीत माहिती सांगा (Explain in Marathi)',
-    'हिंदी में बताइए (Explain in Hindi)',
-    'How do I get a digital 7/12 land record?',
-    'Official government helpline numbers?'
+    'हिंदी में बताइए (Explain in Hindi)'
   ];
 
   const handleSend = async (textToSend) => {

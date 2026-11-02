@@ -16,6 +16,14 @@ import java.util.List;
 public class SchemeController {
     private final SchemeService schemeService;
     private final com.jansahay.service.GovernmentSyncService governmentSyncService;
+    private final com.jansahay.service.DocumentService documentService;
+    private final com.jansahay.util.SecurityUtils securityUtils;
+
+    @GetMapping("/{id}/document-readiness")
+    public ResponseEntity<ApiResponse<com.jansahay.dto.document.DocumentChecklistResponse>> getSchemeDocumentReadiness(@PathVariable Long id) {
+        Long userId = securityUtils.getCurrentUserIdOrNull();
+        return ResponseEntity.ok(ApiResponse.success(documentService.calculateDocumentReadiness(userId, id)));
+    }
 
     @PostMapping("/sync")
     public ResponseEntity<ApiResponse<com.jansahay.dto.realtime.GovSyncReportDto>> syncSchemes() {

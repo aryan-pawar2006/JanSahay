@@ -60,6 +60,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/schemes/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/documents/guides/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/schemes/sync").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/updates/**").permitAll()
                 .requestMatchers("/api/realtime/**").permitAll()
