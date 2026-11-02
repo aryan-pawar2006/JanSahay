@@ -27,6 +27,18 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public List<RequiredDocument> getRequiredDocuments(Long schemeId) {
+        List<RequiredDocument> raw = requiredDocumentRepository.findBySchemeId(schemeId);
+        Map<String, RequiredDocument> uniqueMap = new LinkedHashMap<>();
+        for (RequiredDocument rd : raw) {
+            if (rd.getDocumentName() == null || rd.getDocumentName().isBlank()) continue;
+            String key = rd.getDocumentName().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+            uniqueMap.putIfAbsent(key, rd);
+        }
+        return new ArrayList<>(uniqueMap.values());
+    }
+
+    @Override
     public List<UserDocument> getUserDocuments(Long userId) {
         return userDocumentRepository.findByUserId(userId);
     }
@@ -47,7 +59,17 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentChecklistResponse calculateDocumentReadiness(Long userId, Long schemeId) {
         Scheme scheme = schemeRepository.findById(schemeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Scheme", schemeId));
-        List<RequiredDocument> required = requiredDocumentRepository.findBySchemeId(schemeId);
+        List<RequiredDocument> rawRequired = requiredDocumentRepository.findBySchemeId(schemeId);
+
+        // Ensure each required document is strictly unique by normalized document name
+        Map<String, RequiredDocument> uniqueMap = new LinkedHashMap<>();
+        for (RequiredDocument rd : rawRequired) {
+            if (rd.getDocumentName() == null || rd.getDocumentName().isBlank()) continue;
+            String key = rd.getDocumentName().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+            uniqueMap.putIfAbsent(key, rd);
+        }
+        List<RequiredDocument> required = new ArrayList<>(uniqueMap.values());
+
         List<UserDocument> userDocs = (userId != null) ? userDocumentRepository.findByUserId(userId) : Collections.emptyList();
         Map<String, UserDocument> userDocMap = userDocs.stream()
                 .collect(Collectors.toMap(d -> d.getDocumentName().toLowerCase(), d -> d, (a, b) -> a));

@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,17 +109,40 @@ public class SchemeServiceImpl implements SchemeService {
                 .lastFetchedAt(scheme.getLastFetchedAt())
                 .createdAt(scheme.getCreatedAt());
         if (includeDetails) {
-            List<EligibilityRule> rules = eligibilityRuleRepository.findBySchemeId(scheme.getId());
-            List<RequiredDocument> docs = requiredDocumentRepository.findBySchemeId(scheme.getId());
-            List<ApplicationGuide> guides = applicationGuideRepository.findBySchemeIdOrderByStepNumberAsc(scheme.getId());
-            builder.eligibilityRules(rules.stream().map(r -> EligibilityRuleDto.builder()
+            List<EligibilityRule> rawRules = eligibilityRuleRepository.findBySchemeId(scheme.getId());
+            List<RequiredDocument> rawDocs = requiredDocumentRepository.findBySchemeId(scheme.getId());
+            List<ApplicationGuide> rawGuides = applicationGuideRepository.findBySchemeIdOrderByStepNumberAsc(scheme.getId());
+
+            // Deduplicate rules
+            Map<String, EligibilityRule> uniqueRules = new LinkedHashMap<>();
+            for (EligibilityRule r : rawRules) {
+                String key = (r.getField() + ":" + r.getValue()).toLowerCase();
+                uniqueRules.putIfAbsent(key, r);
+            }
+
+            // Deduplicate docs by normalized name
+            Map<String, RequiredDocument> uniqueDocs = new LinkedHashMap<>();
+            for (RequiredDocument d : rawDocs) {
+                if (d.getDocumentName() != null && !d.getDocumentName().isBlank()) {
+                    String key = d.getDocumentName().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                    uniqueDocs.putIfAbsent(key, d);
+                }
+            }
+
+            // Deduplicate guides by step number
+            Map<Integer, ApplicationGuide> uniqueGuides = new LinkedHashMap<>();
+            for (ApplicationGuide g : rawGuides) {
+                uniqueGuides.putIfAbsent(g.getStepNumber(), g);
+            }
+
+            builder.eligibilityRules(uniqueRules.values().stream().map(r -> EligibilityRuleDto.builder()
                     .id(r.getId()).field(r.getField()).operator(r.getOperator())
                     .value(r.getValue()).logicalGroup(r.getLogicalGroup())
                     .description(r.getDescription()).required(r.getRequired()).build()).collect(Collectors.toList()));
-            builder.requiredDocuments(docs.stream().map(d -> RequiredDocumentDto.builder()
+            builder.requiredDocuments(uniqueDocs.values().stream().map(d -> RequiredDocumentDto.builder()
                     .id(d.getId()).documentName(d.getDocumentName()).purpose(d.getPurpose())
                     .requiredFlag(d.getRequiredFlag()).description(d.getDescription()).build()).collect(Collectors.toList()));
-            builder.applicationGuides(guides.stream().map(g -> ApplicationGuideDto.builder()
+            builder.applicationGuides(uniqueGuides.values().stream().map(g -> ApplicationGuideDto.builder()
                     .id(g.getId()).stepNumber(g.getStepNumber()).title(g.getTitle())
                     .instruction(g.getInstruction()).sourceUrl(g.getSourceUrl()).build()).collect(Collectors.toList()));
         }

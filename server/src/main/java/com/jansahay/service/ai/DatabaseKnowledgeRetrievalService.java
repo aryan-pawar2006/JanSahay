@@ -128,8 +128,15 @@ public class DatabaseKnowledgeRetrievalService implements KnowledgeRetrievalServ
             sb.append("TARGET SCHEME CONTEXT:\n");
             schemeCtx.forEach((k, v) -> sb.append(k).append(": ").append(v).append("\n"));
 
-            // Calculate Document Comparison
-            List<RequiredDocument> reqDocs = requiredDocumentRepository.findBySchemeId(targetSchemeId);
+            // Calculate Document Comparison with deduplication
+            List<RequiredDocument> rawReqDocs = requiredDocumentRepository.findBySchemeId(targetSchemeId);
+            Map<String, RequiredDocument> uniqueReqMap = new LinkedHashMap<>();
+            for (RequiredDocument rd : rawReqDocs) {
+                if (rd.getDocumentName() == null || rd.getDocumentName().isBlank()) continue;
+                String key = rd.getDocumentName().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                uniqueReqMap.putIfAbsent(key, rd);
+            }
+            List<RequiredDocument> reqDocs = new ArrayList<>(uniqueReqMap.values());
             List<String> readyDocs = new ArrayList<>();
             List<String> missingDocs = new ArrayList<>();
 

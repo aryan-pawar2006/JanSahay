@@ -146,7 +146,7 @@ export const SchemeDetailPage = () => {
     );
   }
 
-  const allDocs = readiness?.documents || (scheme.requiredDocuments || []).map(rd => ({
+  const rawDocs = readiness?.documents || (scheme.requiredDocuments || []).map(rd => ({
     documentName: rd.documentName,
     purpose: rd.purpose,
     requiredFlag: rd.requiredFlag,
@@ -157,8 +157,21 @@ export const SchemeDetailPage = () => {
     hasGuide: true
   }));
 
+  // Ensure each document is strictly unique by normalized document name
+  const seenDocKeys = new Set();
+  const allDocs = [];
+  for (const doc of rawDocs) {
+    if (!doc || !doc.documentName) continue;
+    const key = doc.documentName.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!seenDocKeys.has(key)) {
+      seenDocKeys.add(key);
+      allDocs.push(doc);
+    }
+  }
+
   const inHandDocs = allDocs.filter(d => d.status === 'AVAILABLE');
   const missingDocs = allDocs.filter(d => d.status !== 'AVAILABLE');
+  const computedReadinessPercent = allDocs.length > 0 ? Math.round((inHandDocs.length / allDocs.length) * 100) : 0;
 
   const displayedDocs = docFilterTab === 'IN_HAND' ? inHandDocs : docFilterTab === 'MISSING' ? missingDocs : allDocs;
 
@@ -309,8 +322,8 @@ export const SchemeDetailPage = () => {
               {/* Readiness Progress Indicator */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: (readiness?.readinessPercentage || 0) === 100 ? '#15803d' : '#ea580c' }}>
-                    {readiness?.readinessPercentage || 0}% Ready
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: computedReadinessPercent === 100 ? '#15803d' : '#ea580c' }}>
+                    {computedReadinessPercent}% Ready
                   </div>
                   <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
                     {inHandDocs.length} of {allDocs.length} Documents in Hand
@@ -318,7 +331,7 @@ export const SchemeDetailPage = () => {
                 </div>
                 <div style={{ width: '100px' }}>
                   <div className="progress-bar-bg" style={{ height: '10px' }}>
-                    <div className="progress-bar-fill" style={{ width: `${readiness?.readinessPercentage || 0}%`, background: (readiness?.readinessPercentage || 0) === 100 ? '#16a34a' : '#ea580c' }}></div>
+                    <div className="progress-bar-fill" style={{ width: `${computedReadinessPercent}%`, background: computedReadinessPercent === 100 ? '#16a34a' : '#ea580c' }}></div>
                   </div>
                 </div>
               </div>

@@ -92,10 +92,11 @@ function SafeMarkdown({ text }) {
 
 export const AIChatDrawer = ({ currentScheme = null }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('COMMON');
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: `**नमस्ते! Welcome to JanSahay AI Assistant!** 🙏\n\nI provide verified assistance for **30+ government welfare schemes** and official certificate procedures.\n\nAsk me:\n• *"What scholarships are available for B.Tech students?"*\n• *"How do I obtain an Income Certificate?"*\n• *"PM-KISAN योजनेसाठी कोणती कागदपत्रे लागतात?"*\n• *"पीएम किसान का पैसा कब आएगा?"*`,
+      text: `**नमस्ते! Welcome to JanSahay AI Assistant!** 🙏\n\nI provide verified step-by-step solutions for **40+ government welfare schemes**, document readiness, and every small or big problem you might face.\n\nTap any topic chip below or type your question in English, Hindi, or Marathi!`,
       provider: 'JanSahay Grounded Engine',
       sources: []
     }
@@ -111,28 +112,84 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
     }
   }, [messages, loading, isOpen]);
 
-  const quickPrompts = [
-    ...(currentScheme ? [
-      `What documents do I still need for this scheme?`,
-      `Am I eligible for ${currentScheme.name?.split(' ')[0]}?`,
-      `How do I apply for ${currentScheme.name?.split(' ')[0]}?`,
-      `Where is the official portal to apply?`
-    ] : [
-      'What schemes are available for engineering students?',
-      'PM-KISAN and Namo Shetkari ₹12,000 details?',
-      'What are the 3 loan categories under Mudra?',
-      'लाडकी बहीण योजनेची माहिती व पात्रता (Ladki Bahin)?'
-    ]),
-    'Which documents do I currently have in hand?',
-    'How do I obtain an Income Certificate in Maharashtra?',
-    'How do I get a digital 7/12 land extract?',
-    'How to apply for Caste Validity on BARTI?',
-    'How to seed bank account with Aadhaar (NPCI DBT)?',
-    'What is Non-Creamy Layer (NCL) and who qualifies?',
-    'Official government welfare helpline numbers?',
-    'मराठीत माहिती सांगा (Explain in Marathi)',
-    'हिंदी में बताइए (Explain in Hindi)'
-  ];
+  const promptCategories = {
+    COMMON: {
+      label: '🔥 Common Fixes',
+      prompts: [
+        'Aadhaar OTP is not coming / mobile not linked — what to do?',
+        'How to seed bank account with Aadhaar (NPCI DBT)?',
+        'Why was my Income Certificate rejected & how to appeal?',
+        'PM-KISAN Land Seeding: NO — how to fix with Talathi?',
+        'MahaDBT application sent back with scrutiny remark?',
+        'Which documents do I currently have in hand?'
+      ]
+    },
+    CERTIFICATES: {
+      label: '📜 Certificates',
+      prompts: [
+        'How do I obtain an Income Certificate in Maharashtra?',
+        'How do I get a digital 7/12 land extract?',
+        'How to apply for Caste Validity on BARTI CCVIS?',
+        'What is Non-Creamy Layer (NCL) and who qualifies?',
+        'How to get an EWS Certificate (< ₹8L)?',
+        'Unique Disability ID (UDID) card application process?'
+      ]
+    },
+    STUDENTS: {
+      label: '🎓 Students',
+      prompts: [
+        'What documents do I need for MahaDBT EBC Scholarship?',
+        'Can I take both State and Central scholarships?',
+        'Is Management quota student eligible for fee waiver?',
+        'How to make a Gap Certificate affidavit for 1-year break?',
+        'Dr. Panjabrao Deshmukh Hostel Allowance (₹30,000)?'
+      ]
+    },
+    FARMERS: {
+      label: '🌾 Farmers',
+      prompts: [
+        'PM-KISAN and Namo Shetkari ₹12,000 details?',
+        'How to do PM-KISAN e-KYC on mobile with Face Auth?',
+        '90% subsidy for Solar Agriculture Pump (KUSUM / Magel Tyala)?',
+        '0% Interest Crop Loan (Pik Karj) up to ₹3 Lakh?',
+        'पीएम किसान योजनेसाठी कोणती कागदपत्रे लागतात?'
+      ]
+    },
+    WOMEN: {
+      label: '🌸 Women & Family',
+      prompts: [
+        'लाडकी बहीण योजनेची पात्रता व कागदपत्रे (Majhi Ladki Bahin)?',
+        'Can 2 women in the same family get Ladki Bahin?',
+        'Pradhan Mantri Matru Vandana Yojana (₹5,000 maternity)?',
+        'Sukanya Samriddhi Yojana (SSY) interest rate & rules?'
+      ]
+    },
+    BUSINESS: {
+      label: '💼 Business & Loans',
+      prompts: [
+        'Bank asking collateral for Mudra loan — what are RBI rules?',
+        'What are the 3 loan categories under PM Mudra?',
+        'PMEGP 35% government capital subsidy on new business?',
+        'PM SVANidhi ₹10,000 street vendor micro-loan?',
+        'PM Vishwakarma toolkit ₹15,000 + 5% loan for artisans?'
+      ]
+    },
+    HELPLINES: {
+      label: '📞 Helplines & RTS',
+      prompts: [
+        'Official government welfare helpline numbers?',
+        'How to file complaint under Maharashtra RTS 2015?',
+        'File a grievance on CPGRAMS or CM Helpline?'
+      ]
+    }
+  };
+
+  const schemeSpecificPrompts = currentScheme ? [
+    `What documents do I still need for ${currentScheme.name?.split(' ')[0]}?`,
+    `Am I eligible for ${currentScheme.name?.split(' ')[0]}?`,
+    `How do I apply for ${currentScheme.name?.split(' ')[0]}?`,
+    `Where is the official portal to apply?`
+  ] : [];
 
   const handleSend = async (textToSend) => {
     const question = (textToSend || input).trim();
@@ -349,11 +406,60 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Prompts Carousel */}
-          <div style={{ padding: '0.4rem 0.6rem', borderTop: '1px solid #e2e8f0', background: '#ffffff', display: 'flex', gap: '0.35rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
-            {quickPrompts.map((qp, idx) => (
+          {/* Category Tabs for Questions */}
+          <div style={{ padding: '0.35rem 0.6rem 0.2rem', borderTop: '1px solid #e2e8f0', background: '#f8fafc', display: 'flex', gap: '0.3rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            {Object.keys(promptCategories).map((catKey) => {
+              const cat = promptCategories[catKey];
+              const isSelected = selectedCategory === catKey;
+              return (
+                <button
+                  key={catKey}
+                  type="button"
+                  onClick={() => setSelectedCategory(catKey)}
+                  style={{
+                    background: isSelected ? '#1e3a8a' : '#ffffff',
+                    color: isSelected ? '#ffffff' : '#475569',
+                    border: isSelected ? '1px solid #1e3a8a' : '1px solid #cbd5e1',
+                    borderRadius: '6px',
+                    padding: '0.2rem 0.55rem',
+                    fontSize: '0.66rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}>
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Quick Prompts Carousel for Selected Category */}
+          <div style={{ padding: '0.35rem 0.6rem 0.45rem', background: '#ffffff', display: 'flex', gap: '0.35rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            {schemeSpecificPrompts.map((qp, idx) => (
+              <button
+                key={`scheme-${idx}`}
+                type="button"
+                onClick={() => handleSend(qp)}
+                disabled={loading}
+                style={{
+                  background: '#fef3c7',
+                  border: '1px solid #f59e0b',
+                  borderRadius: '9999px',
+                  padding: '0.25rem 0.65rem',
+                  fontSize: '0.68rem',
+                  color: '#92400e',
+                  fontWeight: 700,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  flexShrink: 0,
+                  opacity: loading ? 0.6 : 1
+                }}>
+                ⚡ {qp}
+              </button>
+            ))}
+            {(promptCategories[selectedCategory]?.prompts || []).map((qp, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => handleSend(qp)}
                 disabled={loading}
                 style={{
