@@ -1,0 +1,2 @@
+package com.jansahay.enums;
+public enum FarmingType { CROP_FARMING, HORTICULTURE, ANIMAL_HUSBANDRY, FISHERIES, ORGANIC_FARMING, MIXED_FARMING }

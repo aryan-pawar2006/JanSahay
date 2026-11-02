@@ -1,0 +1,2 @@
+package com.jansahay.enums;
+public enum EducationLevel { PRIMARY, SECONDARY, HIGHER_SECONDARY, UNDERGRADUATE, POSTGRADUATE, DOCTORATE, DIPLOMA, ITI }

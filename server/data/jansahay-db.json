@@ -287,9 +287,9 @@
         }
       ],
       "dataStatus": "LIVE",
-      "lastFetchedAt": "2026-10-20T15:20:42.890Z",
+      "lastFetchedAt": "2026-10-20T20:24:41.102Z",
       "portalStatus": "ONLINE",
-      "updatedAt": "2026-10-20T15:20:42.891Z"
+      "updatedAt": "2026-10-20T20:24:41.102Z"
     },
     {
       "id": 2,
@@ -473,7 +473,7 @@
       ],
       "dataStatus": "CACHED",
       "portalStatus": "UNREACHABLE",
-      "updatedAt": "2026-10-20T15:20:42.773Z"
+      "updatedAt": "2026-10-20T20:24:41.001Z"
     },
     {
       "id": 4,
