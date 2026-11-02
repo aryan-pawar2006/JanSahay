@@ -7,11 +7,18 @@ echo   Backend:  Java 17 + Spring Boot 3 + MySQL 8 (Port 8080)
 echo   Frontend: React 18 + Vite (Port 5173)
 echo ========================================================
 
-echo Starting Java Spring Boot Backend Server...
-start "JanSahay 2.0 - Java Backend" cmd /k "cd server && mvn spring-boot:run"
+echo [1/2] Starting Java Spring Boot Backend Server...
+start "JanSahay 2.0 - Java Backend (Port 8080)" cmd /k "cd server && java -jar target\jansahay-backend-1.0.0.jar"
 
-echo Starting React Vite Frontend...
-start "JanSahay 2.0 - React Frontend" cmd /k "cd client && npm run dev"
+echo [2/2] Starting React Vite Frontend...
+start "JanSahay 2.0 - React Frontend (Port 5173)" cmd /k "cd client && npm run dev"
 
-echo Both services launched! Access your application at http://localhost:5173
+echo.
+echo ========================================================
+echo Both services launched successfully!
+echo.
+echo - Web Application:  http://localhost:5173
+echo - API Backend:       http://localhost:8080/api/schemes
+echo ========================================================
+echo.
 pause
