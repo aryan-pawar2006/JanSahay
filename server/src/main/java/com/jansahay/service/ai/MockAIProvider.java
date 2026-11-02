@@ -198,8 +198,16 @@ public class MockAIProvider implements AIProvider {
                    "4. Pay ₹33 online fee. Collect digitally signed barcode certificate from portal dashboard.";
         }
 
+        // 5.3.1 DIFFERENCE BETWEEN 7/12 EXTRACT AND FERFAR (MUTATION)
+        if (msg.contains("ferfar") || msg.contains("7/12 vs") || msg.contains("फेरफार म्हणजे काय") || msg.contains("mutation") || msg.contains("फरक")) {
+            return "🌾 **Difference Between 7/12 Extract (सातबारा) and Ferfar (फेरफार नोंद):**\n\n" +
+                   "• **7/12 Extract (गाव नमुना ७ व १२):** Shows **current legal ownership**, total land area, Gat number, and seasonal crop entries (Pik Pahani).\n" +
+                   "• **Ferfar (गाव नमुना ६ - Mutation Register):** Shows the **historical transaction log** of how ownership changed (e.g. through inheritance/Varas Nond, sale deed/Kharidkhat, gift deed/Baksheesh, or bank loan hypothecation).\n" +
+                   "• **Both can be downloaded with digital signature** at [https://digitalsatbara.mahabhumi.gov.in](https://digitalsatbara.mahabhumi.gov.in) for ₹15 each.";
+        }
+
         // 5.4 Digital 7/12 & 8A Land Extract & Ferfar
-        if (msg.contains("7/12") || msg.contains("satbara") || msg.contains("सातबारा") || msg.contains("८-अ") || msg.contains("8a") || msg.contains("land extract") || msg.contains("ferfar") || msg.contains("फेरफार")) {
+        if (msg.contains("7/12") || msg.contains("satbara") || msg.contains("सातबारा") || msg.contains("८-अ") || msg.contains("8a") || msg.contains("land extract") || msg.contains("फेरफार")) {
             return "🌾 **How to Obtain Digital 7/12 & 8A Land Extracts (डिजिटल स्वाक्षरीत सातबारा व ८-अ):**\n\n" +
                    "• **Official Portal:** [https://digitalsatbara.mahabhumi.gov.in](https://digitalsatbara.mahabhumi.gov.in)\n" +
                    "• **Official Fee & Speed:** ₹15 per copy • Instant Download (24x7 Real-Time)\n" +
@@ -211,6 +219,13 @@ public class MockAIProvider implements AIProvider {
                    "4. Enter Gat Number or Survey Number and select Khatedar name.\n" +
                    "5. Click 'Download Digitally Signed 7/12' to get PDF with official digital signature and 16-digit ULPIN code.\n\n" +
                    "**Need Name Correction / Ferfar (Mutation)?** Apply online via E-Hakk portal ([https://pDS.mahabhumi.gov.in](https://pds.mahabhumi.gov.in)) for inheritance (Varas Nond) without visiting Talathi office.";
+        }
+
+        // 5.4.1 CASTE VALIDITY DURATION: LIFETIME OR TEMPORARY?
+        if (msg.contains("validity lifetime") || msg.contains("validity duration") || msg.contains("पडताळणी मुदत") || msg.contains("how long caste validity") || msg.contains("validity expire") || msg.contains("lifetime")) {
+            return "📜 **Caste Validity Certificate (जात पडताळणी) Duration Rules:**\n\n" +
+                   "• **Official Rule:** Once a **Caste Validity Certificate** is issued by the Divisional Caste Scrutiny Committee (BARTI/Tribal Research), it is **VALID FOR LIFETIME**!\n" +
+                   "• **Does it Expire?** No! It never expires and never needs renewal. It remains valid for all future degree admissions, competitive exams (MPSC/UPSC), and government employment throughout your life.";
         }
 
         // 5.5 Caste Certificate & Caste Validity (BARTI)
@@ -535,6 +550,57 @@ public class MockAIProvider implements AIProvider {
                    "2. **Chief Minister Grievance Cell (CM Helpline):** Dial **1800-120-8040** (Toll-Free, 24x7).\n" +
                    "3. **National Central Portal (CPGRAMS):** File an online grievance at [https://pgportal.gov.in](https://pgportal.gov.in). Central government ministries monitor resolution directly.\n" +
                    "4. **Anti-Corruption Bureau (ACB Maharashtra):** If any middleman or official demands a bribe: Dial **1064**.";
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
+        // 11.4 SCHOLARSHIP DISBURSEMENT TIMELINE & DELAYS
+        // ══════════════════════════════════════════════════════════════════════════
+        if (msg.contains("disbursement") || msg.contains("scholarship delay") || msg.contains("कधी जमा होते") || msg.contains("when will scholarship come") || msg.contains("installment date")) {
+            return "⏳ **Scholarship Disbursement Timeline (MahaDBT & NSP):**\n\n" +
+                   "• **Standard Workflow:** College Scrutiny -> Department Clerk -> District Officer Allotment -> Treasury Sanction -> PFMS Direct Credit.\n" +
+                   "• **Typical Release Window:** 1st Installment is released in **December to January**, and 2nd Installment in **March to April**.\n" +
+                   "• **What to Check if Delayed:**\n" +
+                   "  1. Login to MahaDBT -> My Applied Schemes -> Check status is **'Approved'**.\n" +
+                   "  2. If status is **'Voucher Generated'**, payment is awaiting state treasury fund release.\n" +
+                   "  3. Ensure your bank account shows **'NPCI Seeded: Active'** at myaadhaar.uidai.gov.in so direct credit does not bounce.";
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
+        // 11.5 COLLEGE CHARGING EXTRA FEES DESPITE SCHOLARSHIP
+        // ══════════════════════════════════════════════════════════════════════════
+        if (msg.contains("extra fee") || msg.contains("college charging") || msg.contains("जास्त फी") || msg.contains("फी मागत आहे") || msg.contains("illegal fee")) {
+            return "🚫 **Problem: College Demanding Extra Fees Despite Government Scholarship / EBC:**\n\n" +
+                   "• **Statutory Government Order (GR):** Colleges are strictly forbidden from demanding the government share of tuition fees from approved reserved category (SC/ST/VJNT/OBC) or EBC students.\n" +
+                   "• **Remedy Steps:**\n" +
+                   "  1. Submit a written letter to the College Principal citing your **MahaDBT Application ID** and approved allotment status.\n" +
+                   "  2. If the college refuses, lodge a complaint with the **Joint Director of Higher / Technical Education (DTE)** or the **District Social Welfare Assistant Commissioner**.\n" +
+                   "  3. Escalate on the state helpline: **022-49150800**.";
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
+        // 11.6 LANDLESS FARM LABORERS (SHETMAJUR) ASSISTANCE
+        // ══════════════════════════════════════════════════════════════════════════
+        if (msg.contains("landless") || msg.contains("shetmajur") || msg.contains("शेतमजूर") || msg.contains("जमीन नाही") || msg.contains("no land")) {
+            return "🌾 **Welfare Schemes for Landless Farm Laborers (शेतमजूर व भूमिहीन शेतकरी):**\n\n" +
+                   "Since PM-KISAN requires land ownership on 7/12 extract, landless agricultural workers are eligible for:\n" +
+                   "1. **Sanjay Gandhi Niradhar Anudan Yojana:** ₹1,500 monthly destitute/elderly/disabled pension.\n" +
+                   "2. **Pradhan Mantri Shram Yogi Maandhan (PM-SYM):** ₹3,000 monthly assured pension after age 60 for unorganized farm laborers (CSC registration).\n" +
+                   "3. **Ayushman Bharat / MJPJAY:** 100% free cashless hospital treatment up to ₹5,00,000/year via Yellow/Orange ration card.\n" +
+                   "4. **PMAY-Gramin:** Free pucca house grant of ₹1,20,000 + MGNREGA construction wages.";
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
+        // 11.7 EXPLAIN THIS SCHEME (AUTO-PROMPT HANDLER)
+        // ══════════════════════════════════════════════════════════════════════════
+        if (schemeName != null && (msg.contains("explain") || msg.contains("tell me about") || msg.contains("सांगा") || msg.contains("about this scheme"))) {
+            return "ℹ️ **Complete Explanation for " + schemeName + ":**\n\n" +
+                   "• **What it is:** " + (schemeDesc != null ? schemeDesc : "Official government welfare program.") + "\n\n" +
+                   "• **Core Benefit:** " + (schemeBenefit != null ? schemeBenefit : "Financial and welfare support as per published rules.") + "\n\n" +
+                   "• **Your Document Readiness:**\n" +
+                   (readyDocs != null ? "  ✅ " + readyDocs + "\n" : "") +
+                   (missingDocs != null ? "  ⏳ " + missingDocs + "\n" : "") + "\n" +
+                   "• **How to Apply Officially:** Click the green *'Apply Directly on Govt Portal'* button below to submit on verified official portal: " +
+                   (schemeSource != null ? "[" + schemeSource + "](" + schemeSource + ")" : "the official government website") + ".";
         }
 
         // ══════════════════════════════════════════════════════════════════════════

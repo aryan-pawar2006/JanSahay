@@ -65,6 +65,16 @@ export const RecommendationsPage = () => {
   const potentialMatches = recommendations.filter(r => r.matchType === 'POTENTIAL_MATCH');
   const moreInfoMatches = recommendations.filter(r => r.matchType === 'MORE_INFORMATION_REQUIRED');
 
+  const handleAskAIAboutScheme = (scheme) => {
+    setSelectedSchemeForAI(scheme);
+    window.dispatchEvent(new CustomEvent('jansahay-open-ai', {
+      detail: {
+        scheme: scheme,
+        initialQuestion: `Please explain ${scheme.schemeName || scheme.name} in simple language and tell me what documents are required.`
+      }
+    }));
+  };
+
   return (
     <div style={{ padding: '3rem 0', minHeight: '85vh', backgroundColor: '#f8fafc' }}>
       <div className="container">
@@ -134,7 +144,7 @@ export const RecommendationsPage = () => {
                     <RecommendationCard
                       key={scheme.schemeId}
                       scheme={scheme}
-                      onAskAI={() => setSelectedSchemeForAI(scheme)}
+                      onAskAI={() => handleAskAIAboutScheme(scheme)}
                     />
                   ))}
                 </div>
@@ -158,7 +168,7 @@ export const RecommendationsPage = () => {
                     <RecommendationCard
                       key={scheme.schemeId}
                       scheme={scheme}
-                      onAskAI={() => setSelectedSchemeForAI(scheme)}
+                      onAskAI={() => handleAskAIAboutScheme(scheme)}
                     />
                   ))}
                 </div>
@@ -182,7 +192,7 @@ export const RecommendationsPage = () => {
                     <RecommendationCard
                       key={scheme.schemeId}
                       scheme={scheme}
-                      onAskAI={() => setSelectedSchemeForAI(scheme)}
+                      onAskAI={() => handleAskAIAboutScheme(scheme)}
                     />
                   ))}
                 </div>

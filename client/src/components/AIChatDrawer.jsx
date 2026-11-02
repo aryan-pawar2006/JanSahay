@@ -23,7 +23,6 @@ function SafeMarkdown({ text }) {
   // Helper to parse bold **text** and links [label](url) into React elements
   const parseInline = (line) => {
     const parts = [];
-    // Regex for bold **...** and markdown links [...](...)
     const regex = /(\*\*.*?\*\*|\[.*?\]\(.*?\))/g;
     let lastIndex = 0;
     let match;
@@ -62,29 +61,34 @@ function SafeMarkdown({ text }) {
       parts.push(line.substring(lastIndex));
     }
 
-    return parts.length > 0 ? parts : line;
+    return parts;
   };
 
   return (
-    <div style={{ fontSize: '0.85rem', lineHeight: 1.6 }}>
-      {lines.map((line, idx) => {
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', lineHeight: 1.6, fontSize: '0.85rem' }}>
+      {lines.map((line, i) => {
         const trimmed = line.trim();
         if (!trimmed) {
-          return <div key={idx} style={{ height: '0.35rem' }} />;
+          return <div key={i} style={{ height: '0.35rem' }} />;
         }
-        if (trimmed.startsWith('• ') || trimmed.startsWith('- ')) {
+        if (trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           return (
-            <div key={idx} style={{ marginLeft: line.startsWith('  ') ? '1.25rem' : '0.5rem', marginBottom: '0.2rem', display: 'flex', gap: '0.35rem' }}>
-              <span>•</span>
-              <div>{parseInline(trimmed.substring(2))}</div>
+            <div key={i} style={{ display: 'flex', gap: '0.4rem', paddingLeft: '0.5rem' }}>
+              <span style={{ color: '#f97316', fontWeight: 800 }}>•</span>
+              <div style={{ flex: 1 }}>{parseInline(trimmed.substring(2))}</div>
             </div>
           );
         }
-        return (
-          <div key={idx} style={{ marginBottom: '0.2rem' }}>
-            {parseInline(line)}
-          </div>
-        );
+        if (/^\d+\.\s/.test(trimmed)) {
+          const numMatch = trimmed.match(/^(\d+)\.\s(.*)/);
+          return (
+            <div key={i} style={{ display: 'flex', gap: '0.4rem', paddingLeft: '0.5rem' }}>
+              <span style={{ color: '#1e3a8a', fontWeight: 800, minWidth: '16px' }}>{numMatch[1]}.</span>
+              <div style={{ flex: 1 }}>{parseInline(numMatch[2])}</div>
+            </div>
+          );
+        }
+        return <div key={i}>{parseInline(line)}</div>;
       })}
     </div>
   );
@@ -92,11 +96,11 @@ function SafeMarkdown({ text }) {
 
 export const AIChatDrawer = ({ currentScheme = null }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('COMMON');
+  const [activeScheme, setActiveScheme] = useState(currentScheme);
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: `**नमस्ते! Welcome to JanSahay AI Assistant!** 🙏\n\nI provide verified step-by-step solutions for **40+ government welfare schemes**, document readiness, and every small or big problem you might face.\n\nTap any topic chip below or type your question in English, Hindi, or Marathi!`,
+      text: `**नमस्ते! Welcome to JanSahay AI Assistant!** 🙏\n\nI am trained to answer any small or big question about government schemes, documents, and application issues.\n\nType your question below in English, Hindi, or Marathi!`,
       provider: 'JanSahay Grounded Engine',
       sources: []
     }
@@ -107,91 +111,47 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    if (currentScheme) {
+      setActiveScheme(currentScheme);
+    }
+  }, [currentScheme]);
+
+  // Global event listener for any "Ask AI About This Scheme" button across the application
+  useEffect(() => {
+    const handleGlobalAskAI = (event) => {
+      const detail = event.detail || {};
+      if (detail.scheme) {
+        setActiveScheme(detail.scheme);
+      }
+      setIsOpen(true);
+      if (detail.initialQuestion) {
+        handleSend(detail.initialQuestion, detail.scheme || activeScheme);
+      }
+    };
+
+    window.addEventListener('jansahay-open-ai', handleGlobalAskAI);
+    return () => window.removeEventListener('jansahay-open-ai', handleGlobalAskAI);
+  }, [activeScheme]);
+
+  useEffect(() => {
     if (messagesEndRef.current && isOpen) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, loading, isOpen]);
 
-  const promptCategories = {
-    COMMON: {
-      label: '🔥 Common Fixes',
-      prompts: [
-        'Aadhaar OTP is not coming / mobile not linked — what to do?',
-        'How to seed bank account with Aadhaar (NPCI DBT)?',
-        'Why was my Income Certificate rejected & how to appeal?',
-        'PM-KISAN Land Seeding: NO — how to fix with Talathi?',
-        'MahaDBT application sent back with scrutiny remark?',
-        'Which documents do I currently have in hand?'
-      ]
-    },
-    CERTIFICATES: {
-      label: '📜 Certificates',
-      prompts: [
-        'How do I obtain an Income Certificate in Maharashtra?',
-        'How do I get a digital 7/12 land extract?',
-        'How to apply for Caste Validity on BARTI CCVIS?',
-        'What is Non-Creamy Layer (NCL) and who qualifies?',
-        'How to get an EWS Certificate (< ₹8L)?',
-        'Unique Disability ID (UDID) card application process?'
-      ]
-    },
-    STUDENTS: {
-      label: '🎓 Students',
-      prompts: [
-        'What documents do I need for MahaDBT EBC Scholarship?',
-        'Can I take both State and Central scholarships?',
-        'Is Management quota student eligible for fee waiver?',
-        'How to make a Gap Certificate affidavit for 1-year break?',
-        'Dr. Panjabrao Deshmukh Hostel Allowance (₹30,000)?'
-      ]
-    },
-    FARMERS: {
-      label: '🌾 Farmers',
-      prompts: [
-        'PM-KISAN and Namo Shetkari ₹12,000 details?',
-        'How to do PM-KISAN e-KYC on mobile with Face Auth?',
-        '90% subsidy for Solar Agriculture Pump (KUSUM / Magel Tyala)?',
-        '0% Interest Crop Loan (Pik Karj) up to ₹3 Lakh?',
-        'पीएम किसान योजनेसाठी कोणती कागदपत्रे लागतात?'
-      ]
-    },
-    WOMEN: {
-      label: '🌸 Women & Family',
-      prompts: [
-        'लाडकी बहीण योजनेची पात्रता व कागदपत्रे (Majhi Ladki Bahin)?',
-        'Can 2 women in the same family get Ladki Bahin?',
-        'Pradhan Mantri Matru Vandana Yojana (₹5,000 maternity)?',
-        'Sukanya Samriddhi Yojana (SSY) interest rate & rules?'
-      ]
-    },
-    BUSINESS: {
-      label: '💼 Business & Loans',
-      prompts: [
-        'Bank asking collateral for Mudra loan — what are RBI rules?',
-        'What are the 3 loan categories under PM Mudra?',
-        'PMEGP 35% government capital subsidy on new business?',
-        'PM SVANidhi ₹10,000 street vendor micro-loan?',
-        'PM Vishwakarma toolkit ₹15,000 + 5% loan for artisans?'
-      ]
-    },
-    HELPLINES: {
-      label: '📞 Helplines & RTS',
-      prompts: [
-        'Official government welfare helpline numbers?',
-        'How to file complaint under Maharashtra RTS 2015?',
-        'File a grievance on CPGRAMS or CM Helpline?'
-      ]
-    }
-  };
+  // Keep suggestions minimal and clean (no clutter, no long lists of questions shown to user)
+  const schemeName = activeScheme?.schemeName || activeScheme?.name;
+  const minimalPrompts = activeScheme ? [
+    `Explain ${schemeName?.split(' ')[0]} in simple words`,
+    `What documents are needed for this scheme?`,
+    `How to apply officially?`
+  ] : [
+    'Which documents do I currently have in hand?',
+    'How do I obtain an Income Certificate?',
+    'Emergency government helpline numbers'
+  ];
 
-  const schemeSpecificPrompts = currentScheme ? [
-    `What documents do I still need for ${currentScheme.name?.split(' ')[0]}?`,
-    `Am I eligible for ${currentScheme.name?.split(' ')[0]}?`,
-    `How do I apply for ${currentScheme.name?.split(' ')[0]}?`,
-    `Where is the official portal to apply?`
-  ] : [];
-
-  const handleSend = async (textToSend) => {
+  const handleSend = async (textToSend, overrideScheme = null) => {
     const question = (textToSend || input).trim();
     if (!question || loading) return;
 
@@ -201,11 +161,13 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
     setLoading(true);
     setLastFailedQuestion(null);
 
+    const schemeToUse = overrideScheme || activeScheme;
+
     try {
       const res = await aiService.chat({
         question,
-        schemeId: currentScheme?.id || null,
-        language: 'en' // server auto-detects English, Hindi, Marathi accurately
+        schemeId: schemeToUse?.id || schemeToUse?.schemeId || null,
+        language: 'en'
       });
 
       if (res && res.success && res.data) {
@@ -230,7 +192,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
         ...prev,
         {
           role: 'assistant',
-          text: `⚠️ **Unable to process your request.**\n\nCould not reach the assistance service. Please verify your connection or click **Retry** below. You can also explore schemes directly via the official portal at [https://www.myscheme.gov.in](https://www.myscheme.gov.in).`,
+          text: `⚠️ **Unable to process your request.**\n\nPlease check your internet connection or click **Retry** below.`,
           provider: 'System Error Notice',
           isError: true
         }
@@ -244,7 +206,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
     setMessages([
       {
         role: 'assistant',
-        text: `Chat cleared. How can I assist you with government schemes or document preparation today?`,
+        text: `Chat cleared. How can I assist you today?`,
         provider: 'JanSahay Grounded Engine',
         sources: []
       }
@@ -292,7 +254,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
             right: '20px',
             width: '450px',
             maxWidth: '94vw',
-            height: '650px',
+            height: '640px',
             maxHeight: '88vh',
             backgroundColor: '#ffffff',
             borderRadius: '1rem',
@@ -312,8 +274,8 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
               </div>
               <div>
                 <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0 }}>JanSahay AI Assistant</h3>
-                <span style={{ fontSize: '0.65rem', color: '#93c5fd' }}>
-                  {currentScheme ? `Context: ${currentScheme.name?.substring(0, 26)}...` : 'Verified Indian Government Knowledge Base'}
+                <span style={{ fontSize: '0.68rem', color: '#93c5fd' }}>
+                  {activeScheme ? `Context: ${schemeName?.substring(0, 26)}...` : 'Ask any scheme or document question'}
                 </span>
               </div>
             </div>
@@ -351,31 +313,8 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
                   ) : (
                     <SafeMarkdown text={m.text} />
                   )}
-
-                  {/* Sources List if provided */}
-                  {m.sources && m.sources.length > 0 && (
-                    <div style={{ marginTop: '0.6rem', paddingTop: '0.5rem', borderTop: '1px solid #f1f5f9', fontSize: '0.72rem', color: '#64748b' }}>
-                      <strong style={{ color: '#0f172a' }}>Verified Sources:</strong>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', marginTop: '0.25rem' }}>
-                        {m.sources.map((src, sIdx) => (
-                          <div key={sIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <span style={{ color: '#15803d' }}>✓</span>
-                            {isSafeUrl(src.url) ? (
-                              <a href={src.url} target="_blank" rel="noreferrer" style={{ color: '#1e3a8a', fontWeight: 600, textDecoration: 'none' }}>
-                                {src.title || src.sourceName} ↗
-                              </a>
-                            ) : (
-                              <span>{src.title}</span>
-                            )}
-                            <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>({src.dataStatus || 'verified'})</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
 
-                {/* Provider Badge */}
                 {m.provider && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.25rem', fontSize: '0.65rem', color: '#64748b' }}>
                     <CheckCircle size={10} color="#15803d" />
@@ -388,7 +327,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
             {loading && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '0.8rem', padding: '0.5rem 0.8rem', background: '#ffffff', borderRadius: '0.6rem', border: '1px solid #e2e8f0', alignSelf: 'flex-start' }}>
                 <Sparkles size={14} color="#1e3a8a" className="animate-spin" />
-                <span>Searching verified government knowledge base...</span>
+                <span>Thinking...</span>
               </div>
             )}
 
@@ -406,69 +345,22 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Category Tabs for Questions */}
-          <div style={{ padding: '0.35rem 0.6rem 0.2rem', borderTop: '1px solid #e2e8f0', background: '#f8fafc', display: 'flex', gap: '0.3rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
-            {Object.keys(promptCategories).map((catKey) => {
-              const cat = promptCategories[catKey];
-              const isSelected = selectedCategory === catKey;
-              return (
-                <button
-                  key={catKey}
-                  type="button"
-                  onClick={() => setSelectedCategory(catKey)}
-                  style={{
-                    background: isSelected ? '#1e3a8a' : '#ffffff',
-                    color: isSelected ? '#ffffff' : '#475569',
-                    border: isSelected ? '1px solid #1e3a8a' : '1px solid #cbd5e1',
-                    borderRadius: '6px',
-                    padding: '0.2rem 0.55rem',
-                    fontSize: '0.66rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    flexShrink: 0
-                  }}>
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Quick Prompts Carousel for Selected Category */}
-          <div style={{ padding: '0.35rem 0.6rem 0.45rem', background: '#ffffff', display: 'flex', gap: '0.35rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
-            {schemeSpecificPrompts.map((qp, idx) => (
-              <button
-                key={`scheme-${idx}`}
-                type="button"
-                onClick={() => handleSend(qp)}
-                disabled={loading}
-                style={{
-                  background: '#fef3c7',
-                  border: '1px solid #f59e0b',
-                  borderRadius: '9999px',
-                  padding: '0.25rem 0.65rem',
-                  fontSize: '0.68rem',
-                  color: '#92400e',
-                  fontWeight: 700,
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  flexShrink: 0,
-                  opacity: loading ? 0.6 : 1
-                }}>
-                ⚡ {qp}
-              </button>
-            ))}
-            {(promptCategories[selectedCategory]?.prompts || []).map((qp, idx) => (
+          {/* Minimal Suggestions (Clean & Simple, NO Clutter) */}
+          <div style={{ padding: '0.35rem 0.6rem', borderTop: '1px solid #e2e8f0', background: '#ffffff', display: 'flex', gap: '0.35rem', overflowX: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            {minimalPrompts.map((qp, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleSend(qp)}
                 disabled={loading}
                 style={{
-                  background: '#f1f5f9',
+                  background: '#f8fafc',
                   border: '1px solid #cbd5e1',
                   borderRadius: '9999px',
                   padding: '0.25rem 0.65rem',
-                  fontSize: '0.68rem',
-                  color: '#334155',
+                  fontSize: '0.7rem',
+                  color: '#475569',
+                  fontWeight: 600,
                   cursor: loading ? 'not-allowed' : 'pointer',
                   flexShrink: 0,
                   opacity: loading ? 0.6 : 1
@@ -486,7 +378,7 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about schemes, eligibility, certificates... (EN/HI/MR)"
+              placeholder="Type any small or big question (EN/HI/MR)..."
               disabled={loading}
               maxLength={1000}
               style={{
@@ -500,16 +392,10 @@ export const AIChatDrawer = ({ currentScheme = null }) => {
             />
             <button
               type="submit"
-              disabled={loading || !input.trim()}
-              style={{
-                background: input.trim() && !loading ? '#1e3a8a' : '#94a3b8',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.5rem',
-                padding: '0.55rem 0.85rem',
-                cursor: input.trim() && !loading ? 'pointer' : 'not-allowed'
-              }}>
-              <Send size={16} />
+              disabled={!input.trim() || loading}
+              className="btn btn-primary btn-sm"
+              style={{ padding: '0 0.85rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Send size={15} />
             </button>
           </form>
         </div>

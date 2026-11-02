@@ -725,26 +725,53 @@ export const SchemeDetailPage = () => {
                 </div>
               </div>
 
-              {scheme.sourceUrl && (
-                <a
-                  href={scheme.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn btn-primary"
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('jansahay-open-ai', {
+                      detail: {
+                        scheme: scheme,
+                        initialQuestion: `Please explain ${scheme.name} in simple words and tell me what documents are still needed.`
+                      }
+                    }));
+                  }}
+                  className="btn btn-outline"
                   style={{
-                    background: '#15803d',
-                    borderColor: '#166534',
-                    padding: '0.75rem 1.5rem',
-                    fontSize: '1rem',
+                    borderColor: '#1e3a8a',
+                    color: '#1e3a8a',
+                    background: '#eff6ff',
+                    padding: '0.75rem 1.25rem',
+                    fontSize: '0.95rem',
                     fontWeight: 800,
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    boxShadow: '0 4px 6px -1px rgba(21, 128, 61, 0.3)'
+                    gap: '0.5rem'
                   }}>
-                  <Globe size={18} /> Apply Directly on Govt Portal <ExternalLink size={16} />
-                </a>
-              )}
+                  <Bot size={18} color="#1e3a8a" /> Ask AI About This Scheme
+                </button>
+
+                {scheme.sourceUrl && (
+                  <a
+                    href={scheme.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-primary"
+                    style={{
+                      background: '#15803d',
+                      borderColor: '#166534',
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '1rem',
+                      fontWeight: 800,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      boxShadow: '0 4px 6px -1px rgba(21, 128, 61, 0.3)'
+                    }}>
+                    <Globe size={18} /> Apply Directly on Govt Portal <ExternalLink size={16} />
+                  </a>
+                )}
+              </div>
             </div>
           </section>
 
