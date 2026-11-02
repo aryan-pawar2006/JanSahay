@@ -89,13 +89,26 @@ export const SchemeDetailPage = () => {
   };
 
   const openGuideForDocument = async (docType, docName) => {
+    const item = (allDocs || []).find(d => d.documentName === docName) ||
+                 (readiness?.documents || []).find(d => d.documentName === docName);
     try {
       const cleanType = docType || docName.toUpperCase().replace(/\s+/g, '_');
       const res = await documentGuideService.getGuideByType(cleanType, scheme?.state || 'Maharashtra');
       if (res.success && res.data) {
-        setActiveGuide(res.data);
+        const g = res.data;
+        if ((!g.prerequisites || g.prerequisites.length === 0) && item?.prerequisites) {
+          g.prerequisites = item.prerequisites;
+        }
+        if ((!g.steps || g.steps.length === 0) && item?.stepByStepProcess) {
+          g.steps = item.stepByStepProcess.map((s, idx) => ({
+            stepNumber: idx + 1,
+            title: `Step ${idx + 1}`,
+            description: s,
+            isOnline: true
+          }));
+        }
+        setActiveGuide(g);
       } else {
-        // Fallback synthetic guide from item
         openFallbackGuide(docName);
       }
     } catch (e) {
@@ -104,7 +117,8 @@ export const SchemeDetailPage = () => {
   };
 
   const openFallbackGuide = (docName) => {
-    const item = (readiness?.documents || []).find(d => d.documentName === docName);
+    const item = (allDocs || []).find(d => d.documentName === docName) ||
+                 (readiness?.documents || []).find(d => d.documentName === docName);
     setActiveGuide({
       id: 999,
       documentType: docName.toUpperCase().replace(/\s+/g, '_'),
@@ -116,14 +130,22 @@ export const SchemeDetailPage = () => {
       estimatedTime: item?.feeAndTimeline?.split('•')[1] || '15 to 21 working days',
       officialUrl: item?.officialPortalUrl || 'https://aaplesarkar.mahaonline.gov.in',
       verificationStatus: 'VERIFIED',
-      prerequisites: item?.prerequisites || ['Aadhaar Card copy', 'Identity Proof', 'Address Proof'],
-      steps: (item?.stepByStepProcess || []).map((step, idx) => ({
-        stepNumber: idx + 1,
-        title: `Step ${idx + 1}`,
-        description: step,
-        isOnline: true,
-        portalName: 'Official State Portal'
-      }))
+      prerequisites: item?.prerequisites && item.prerequisites.length > 0
+        ? item.prerequisites
+        : ['Aadhaar Card copy', 'Identity Proof', 'Address / Domicile Proof', 'Self-declaration affidavit'],
+      steps: item?.stepByStepProcess && item.stepByStepProcess.length > 0
+        ? item.stepByStepProcess.map((step, idx) => ({
+            stepNumber: idx + 1,
+            title: `Step ${idx + 1}`,
+            description: step,
+            isOnline: true,
+            portalName: 'Official State Portal'
+          }))
+        : [
+            { stepNumber: 1, title: 'Step 1: Gather Required Proofs', description: 'Collect your Aadhaar card and supporting residence/income documents.', isOnline: false },
+            { stepNumber: 2, title: 'Step 2: Visit the Official Portal', description: 'Open the verified issuing portal or visit your nearest CSC / Setu Kendra.', isOnline: true },
+            { stepNumber: 3, title: 'Step 3: Fill Application & Submit', description: 'Fill the official form, upload certified scans, and pay the nominal statutory RTS fee.', isOnline: true }
+          ]
     });
   };
 

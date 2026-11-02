@@ -223,9 +223,16 @@ public class GovernmentSyncServiceImpl implements GovernmentSyncService {
             log.warn("PIB live connection notice: {}. Falling back to cached verified updates.", e.getMessage());
         }
 
-        // Return latest updates from repository
-        return governmentUpdateRepository.findByActiveTrueOrderByPublishedDateDesc()
-                .stream().limit(15).map(this::toUpdateDto).collect(Collectors.toList());
+        // Return latest updates from repository (deduplicated)
+        List<GovernmentUpdate> all = governmentUpdateRepository.findByActiveTrueOrderByPublishedDateDesc();
+        Map<String, GovernmentUpdate> unique = new LinkedHashMap<>();
+        for (GovernmentUpdate u : all) {
+            if (u.getTitle() != null && !u.getTitle().isBlank()) {
+                String key = u.getTitle().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                unique.putIfAbsent(key, u);
+            }
+        }
+        return unique.values().stream().limit(15).map(this::toUpdateDto).collect(Collectors.toList());
     }
 
     @Override
@@ -239,13 +246,27 @@ public class GovernmentSyncServiceImpl implements GovernmentSyncService {
                     (s.getBenefit() != null && s.getBenefit().toLowerCase().contains(kw))
             ).collect(Collectors.toList());
         }
-        return all.stream().map(s -> schemeService.getSchemeById(s.getId())).collect(Collectors.toList());
+        Map<String, Scheme> uniqueSchemes = new LinkedHashMap<>();
+        for (Scheme s : all) {
+            if (s.getName() != null && !s.getName().isBlank()) {
+                String key = s.getName().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                uniqueSchemes.putIfAbsent(key, s);
+            }
+        }
+        return uniqueSchemes.values().stream().map(s -> schemeService.getSchemeById(s.getId())).collect(Collectors.toList());
     }
 
     @Override
     public List<GovernmentUpdateDto> getLiveTicker() {
-        return governmentUpdateRepository.findByActiveTrueOrderByPublishedDateDesc()
-                .stream().limit(8).map(this::toUpdateDto).collect(Collectors.toList());
+        List<GovernmentUpdate> all = governmentUpdateRepository.findByActiveTrueOrderByPublishedDateDesc();
+        Map<String, GovernmentUpdate> unique = new LinkedHashMap<>();
+        for (GovernmentUpdate u : all) {
+            if (u.getTitle() != null && !u.getTitle().isBlank()) {
+                String key = u.getTitle().trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+                unique.putIfAbsent(key, u);
+            }
+        }
+        return unique.values().stream().limit(8).map(this::toUpdateDto).collect(Collectors.toList());
     }
 
     private GovernmentUpdateDto toUpdateDto(GovernmentUpdate u) {

@@ -28,7 +28,19 @@ export const SchemesCatalogPage = () => {
         size: 50
       });
       if (res.success && res.data) {
-        setSchemes(res.data.content || []);
+        const raw = res.data.content || [];
+        // Deduplicate schemes so only unique schemes & policies are shown
+        const seen = new Set();
+        const uniqueSchemes = [];
+        for (const s of raw) {
+          if (!s || !s.name) continue;
+          const key = s.name.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueSchemes.push(s);
+          }
+        }
+        setSchemes(uniqueSchemes);
       }
     } catch (err) {
       console.error('Error loading schemes catalog:', err);

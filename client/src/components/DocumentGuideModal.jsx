@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle, ExternalLink, AlertTriangle, Clock, Building, FileText, DollarSign, Check } from 'lucide-react';
+import { X, CheckCircle, ExternalLink, AlertTriangle, Clock, Building, FileText, DollarSign, Check, ShieldCheck, ListOrdered } from 'lucide-react';
 import { documentService } from '../services/api';
 
 export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
@@ -8,6 +8,71 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
 
   if (!guide) return null;
 
+  // 1. Normalize Prerequisites / Required Related Documents
+  const supportingDocs = (guide.prerequisites && guide.prerequisites.length > 0)
+    ? guide.prerequisites
+    : (guide.requiredSupportingDocuments && guide.requiredSupportingDocuments.length > 0)
+      ? guide.requiredSupportingDocuments
+      : [
+          'Aadhaar Card (Identity proof & mobile OTP linking)',
+          'Proof of Residence / Address (Ration Card, Electricity Bill, or Domicile)',
+          'Recent Passport-size Photographs',
+          'Self-declaration Affidavit or Prescribed Application Form'
+        ];
+
+  // 2. Normalize Step-by-Step Process in point-wise format
+  const rawSteps = guide.steps || guide.applicationSteps || guide.stepByStepProcess || [];
+  const normalizedSteps = rawSteps.length > 0
+    ? rawSteps.map((step, idx) => {
+        if (typeof step === 'string') {
+          return {
+            stepNumber: idx + 1,
+            title: `Step ${idx + 1}`,
+            description: step,
+            method: 'ONLINE'
+          };
+        }
+        return {
+          stepNumber: step.stepNumber || idx + 1,
+          title: step.title || `Step ${idx + 1}`,
+          description: step.description || step.detail || step.instruction || '',
+          method: step.method || (step.isOnline ? 'ONLINE' : 'OFFLINE')
+        };
+      })
+    : [
+        {
+          stepNumber: 1,
+          title: 'Step 1: Check Prerequisites & Gather Proofs',
+          description: 'Collect your Aadhaar card, residence proof, and applicable income or academic records listed in the prerequisites section.',
+          method: 'OFFLINE'
+        },
+        {
+          stepNumber: 2,
+          title: 'Step 2: Access the Official Issuing Portal',
+          description: 'Open the verified government portal link provided below or visit the nearest CSC Setu Suvidha Kendra.',
+          method: 'ONLINE'
+        },
+        {
+          stepNumber: 3,
+          title: 'Step 3: Complete Citizen Registration & Upload Proofs',
+          description: 'Login with Aadhaar OTP, select the specific certificate service, fill applicant particulars, and upload scanned documents (under 256KB).',
+          method: 'ONLINE'
+        },
+        {
+          stepNumber: 4,
+          title: 'Step 4: Pay Statutory RTS Fee & Track Application',
+          description: 'Pay the government statutory fee online via UPI/Netbanking, record your application tracking number, and download the digitally signed certificate upon approval.',
+          method: 'ONLINE'
+        }
+      ];
+
+  // 3. Normalize Metadata
+  const issuingAuthority = guide.issuingAuthority || 'Competent Revenue Officer / Tahsildar';
+  const statutoryFees = guide.possibleFees || guide.feeAndTimeline?.split('•')[0]?.trim() || '₹33 to ₹50 statutory RTS fee';
+  const processingTime = guide.estimatedTime || guide.expectedProcessingTime || guide.feeAndTimeline?.split('•')[1]?.trim() || '15 to 21 working days';
+  const officialPortalUrl = guide.officialUrl || guide.officialApplicationUrl || guide.officialPortalUrl || 'https://aaplesarkar.mahaonline.gov.in';
+  const description = guide.simpleDescription || guide.howToGetGuide || `Official government certificate required for welfare schemes.`;
+
   const handleMarkAvailable = async () => {
     setMarkingAvailable(true);
     try {
@@ -15,7 +80,7 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
         documentName: guide.title,
         documentType: guide.documentType,
         status: 'AVAILABLE',
-        notes: `Marked available from guidance card on ${new Date().toLocaleDateString('en-IN')}`
+        notes: `Marked available from guidance modal on ${new Date().toLocaleDateString('en-IN')}`
       });
       setMarkedSuccess(true);
       if (onStatusUpdated) onStatusUpdated(guide.documentType, 'AVAILABLE');
@@ -27,124 +92,159 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose} style={{
+      position: 'fixed',
+      top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: 'rgba(15, 23, 42, 0.75)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: 1100, padding: '1rem',
+      backdropFilter: 'blur(3px)'
+    }}>
+      <div className="modal-content" onClick={e => e.stopPropagation()} style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '1rem',
+        maxWidth: '780px',
+        width: '100%',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        border: '1px solid #cbd5e1'
+      }}>
         {/* Modal Header */}
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: '#f8fafc' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-              <span className={`badge ${
-                guide.verificationStatus === 'VERIFIED' ? 'badge-verified' :
-                guide.verificationStatus === 'OUTDATED' ? 'badge-outdated' : 'badge-unverified'
-              }`}>
-                {guide.verificationStatus === 'VERIFIED' ? '✓ Verified Official Guide' :
-                 guide.verificationStatus === 'OUTDATED' ? '⚠ Outdated Instructions' : '⏳ Verification Pending'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
+              <span style={{
+                background: '#dcfce7', color: '#15803d',
+                padding: '0.2rem 0.6rem', borderRadius: '9999px',
+                fontSize: '0.72rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem'
+              }}>
+                <ShieldCheck size={13} /> Official Acquisition Guide
               </span>
               <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                State: <strong>{guide.applicableState || 'All India'}</strong>
+                Applicable: <strong>{guide.applicableState || 'Maharashtra & Central'}</strong>
               </span>
             </div>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#1e3a8a' }}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e3a8a', margin: 0 }}>
               {guide.title}
             </h2>
           </div>
           <button
             onClick={onClose}
-            style={{ background: '#f1f5f9', border: 'none', borderRadius: '9999px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#64748b' }}>
+            title="Close modal"
+            style={{ background: '#e2e8f0', border: 'none', borderRadius: '9999px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#475569' }}>
             <X size={18} />
           </button>
         </div>
 
         {/* Modal Body */}
         <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* Outdated Warning */}
-          {guide.verificationStatus === 'OUTDATED' && (
-            <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', padding: '0.75rem 1rem', borderRadius: '0.5rem', display: 'flex', gap: '0.75rem', alignItems: 'center', color: '#991b1b', fontSize: '0.85rem' }}>
-              <AlertTriangle size={18} />
-              <span>Warning: This document procedure has not been verified recently. Procedures and portals may have changed. Verify with official portal below.</span>
-            </div>
-          )}
 
-          {/* 1. What is this document & Simple Description */}
+          {/* 1. What is this document & Purpose */}
           <div>
-            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <FileText size={16} color="#3b82f6" /> 1. What is this document?
+            <h4 style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.45rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <FileText size={16} color="#2563eb" /> 1. Overview &amp; Official Purpose
             </h4>
-            <p style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', padding: '0.875rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
-              {guide.simpleDescription}
+            <div style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', padding: '0.9rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
+              {description}
+            </div>
+          </div>
+
+          {/* 2. Key Metadata Cards: Issuing Authority, Fees, Timeline */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.85rem' }}>
+            <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '0.85rem', borderRadius: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#15803d', fontSize: '0.72rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                <Building size={14} /> ISSUING AUTHORITY
+              </div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
+                {issuingAuthority}
+              </div>
+            </div>
+
+            <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', padding: '0.85rem', borderRadius: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#c2410c', fontSize: '0.72rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                <DollarSign size={14} /> STATUTORY GOVERNMENT FEES
+              </div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
+                {statutoryFees}
+              </div>
+            </div>
+
+            <div style={{ background: '#faf5ff', border: '1px solid #e9d5ff', padding: '0.85rem', borderRadius: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#7e22ce', fontSize: '0.72rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                <Clock size={14} /> EXPECTED TIMELINE (RTS)
+              </div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
+                {processingTime}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Related Documents Needed to Create This Document (PREREQUISITES) */}
+          <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '0.65rem', padding: '1.1rem' }}>
+            <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#166534', margin: '0 0 0.65rem 0', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <CheckCircle size={18} color="#15803d" />
+              <span>2. Related Documents Needed to Create This Document (Prerequisites Checklist)</span>
+            </h4>
+            <p style={{ fontSize: '0.82rem', color: '#15803d', margin: '0 0 0.75rem 0' }}>
+              You must have these supporting documents ready in your hand before applying to the issuing authority:
             </p>
-          </div>
-
-          {/* 2. Key Metadata Badges: Authority, Fees, Timeline */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.875rem', borderRadius: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748b', fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                <Building size={14} color="#0f766e" /> ISSUING AUTHORITY
-              </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
-                {guide.issuingAuthority || 'Competent Revenue Officer'}
-              </div>
-            </div>
-
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.875rem', borderRadius: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748b', fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                <DollarSign size={14} color="#ea580c" /> STATUTORY FEES
-              </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
-                {guide.possibleFees || 'As per State RTS rules'}
-              </div>
-            </div>
-
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.875rem', borderRadius: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748b', fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                <Clock size={14} color="#7c3aed" /> PROCESSING TIME
-              </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
-                {guide.expectedProcessingTime || '15 to 21 working days'}
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+              {supportingDocs.map((doc, idx) => (
+                <div key={idx} style={{
+                  display: 'flex', alignItems: 'center', gap: '0.55rem',
+                  background: '#ffffff', border: '1px solid #bbf7d0',
+                  borderRadius: '0.4rem', padding: '0.55rem 0.75rem',
+                  fontSize: '0.85rem', color: '#14532d', fontWeight: 600
+                }}>
+                  <span style={{ color: '#16a34a', fontWeight: 800, fontSize: '0.9rem' }}>✓</span>
+                  <span>{doc}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* 3. Supporting Documents Required */}
+          {/* 4. Step-by-Step Process in Simple, Point-Wise Language */}
           <div>
-            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-              2. Supporting Documents You Must Keep Ready:
+            <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.4rem 0', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <ListOrdered size={18} color="#1e3a8a" />
+              <span>3. Step-by-Step Process to Officially Generate This Document:</span>
             </h4>
-            <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '0.5rem', padding: '0.875rem' }}>
-              <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.85rem', color: '#166534', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                {guide.requiredSupportingDocuments && guide.requiredSupportingDocuments.map((doc, idx) => (
-                  <li key={idx} style={{ lineHeight: 1.5 }}>
-                    <strong>{doc}</strong>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* 4. Step-by-Step Application Instructions */}
-          <div>
-            <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-              3. Step-by-Step Application Process:
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {guide.applicationSteps && guide.applicationSteps.map((step, idx) => (
-                <div key={idx} style={{ display: 'flex', gap: '0.75rem', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '0.5rem', padding: '0.875rem' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '9999px', background: '#1e3a8a', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
+            <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 0.85rem 0' }}>
+              Follow these simple, point-wise instructions to complete your application officially:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              {normalizedSteps.map((step, idx) => (
+                <div key={idx} style={{
+                  display: 'flex', gap: '0.85rem',
+                  background: '#ffffff', border: '1px solid #e2e8f0',
+                  borderRadius: '0.5rem', padding: '0.95rem',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                }}>
+                  <div style={{
+                    width: '30px', height: '30px', borderRadius: '50%',
+                    background: '#1e3a8a', color: '#ffffff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 800, fontSize: '0.85rem', flexShrink: 0
+                  }}>
                     {step.stepNumber || idx + 1}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                      <h5 style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0f172a' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem', flexWrap: 'wrap', gap: '0.3rem' }}>
+                      <h5 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
                         {step.title}
                       </h5>
-                      {step.method && (
-                        <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', borderRadius: '4px', background: step.method === 'ONLINE' ? '#eff6ff' : '#fef3c7', color: step.method === 'ONLINE' ? '#1d4ed8' : '#b45309', fontWeight: 600 }}>
-                          {step.method}
-                        </span>
-                      )}
+                      <span style={{
+                        fontSize: '0.68rem', padding: '0.15rem 0.5rem', borderRadius: '4px',
+                        background: step.method === 'ONLINE' ? '#dbeafe' : '#fef3c7',
+                        color: step.method === 'ONLINE' ? '#1e40af' : '#92400e',
+                        fontWeight: 700
+                      }}>
+                        {step.method || 'ONLINE'}
+                      </span>
                     </div>
-                    <p style={{ fontSize: '0.825rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                      {step.detail || step.instruction}
+                    <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.6, margin: 0 }}>
+                      {step.description}
                     </p>
                   </div>
                 </div>
@@ -152,40 +252,47 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
             </div>
           </div>
 
-          {/* 5. Additional Notes & Official Links */}
-          {guide.additionalNotes && (
-            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '0.875rem', borderRadius: '0.5rem', fontSize: '0.825rem', color: '#92400e' }}>
-              <strong>Important Guidance:</strong> {guide.additionalNotes}
+          {/* 5. Official Government Application Portal Link */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            background: 'linear-gradient(135deg, #1e3a8a 0%, #0f2459 100%)',
+            color: '#ffffff', padding: '1.15rem 1.25rem', borderRadius: '0.65rem',
+            flexWrap: 'wrap', gap: '1rem'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.72rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                DIRECT OFFICIAL ISSUING PORTAL
+              </div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff', marginTop: '0.2rem' }}>
+                Apply directly on the official government department website
+              </div>
             </div>
-          )}
-
-          {/* Official Link */}
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>OFFICIAL APPLICATION PORTAL</div>
-              <a
-                href={guide.officialApplicationUrl || '#'}
-                target="_blank"
-                rel="noreferrer"
-                style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1e3a8a', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', wordBreak: 'break-all' }}>
-                {guide.officialApplicationUrl || 'Portal link available at Tahsil Office'} <ExternalLink size={14} />
-              </a>
-            </div>
-            {guide.officialInformationUrl && (
-              <a
-                href={guide.officialInformationUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-outline btn-sm">
-                Gazette / Rules <ExternalLink size={12} />
-              </a>
-            )}
+            <a
+              href={officialPortalUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+              style={{
+                background: '#f97316', color: '#ffffff', border: 'none',
+                fontWeight: 800, fontSize: '0.85rem', padding: '0.6rem 1.25rem',
+                borderRadius: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                textDecoration: 'none'
+              }}>
+              <span>Open Official Portal</span>
+              <ExternalLink size={15} />
+            </a>
           </div>
+
         </div>
 
         {/* Modal Footer Actions */}
-        <div style={{ padding: '1rem 1.5rem', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={onClose} className="btn btn-outline">
+        <div style={{
+          padding: '1rem 1.5rem', backgroundColor: '#f8fafc',
+          borderTop: '1px solid #e2e8f0', display: 'flex',
+          justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: '0.75rem'
+        }}>
+          <button onClick={onClose} className="btn btn-outline" style={{ fontWeight: 600 }}>
             Close Guide
           </button>
 
@@ -193,16 +300,19 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
             onClick={handleMarkAvailable}
             disabled={markingAvailable || markedSuccess}
             className="btn btn-primary"
-            style={{ backgroundColor: markedSuccess ? '#15803d' : '#1e3a8a' }}>
+            style={{
+              backgroundColor: markedSuccess ? '#15803d' : '#1e3a8a',
+              display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700
+            }}>
             {markedSuccess ? (
               <>
-                <Check size={16} /> Marked in My Documents!
+                <Check size={16} /> Saved as In-Hand Document!
               </>
             ) : markingAvailable ? (
               'Saving...'
             ) : (
               <>
-                <CheckCircle size={16} /> I Already Have This Document
+                <CheckCircle size={16} /> Mark as Now in My Hand
               </>
             )}
           </button>
