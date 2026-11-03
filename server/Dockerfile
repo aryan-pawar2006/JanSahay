@@ -9,7 +9,7 @@ WORKDIR /build
 
 # Cache Maven dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:resolve -B
 
 # Copy application source and build the executable fat jar
 COPY src ./src
