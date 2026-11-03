@@ -5,7 +5,6 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  VITE_API_URL = "https://forum-newcastle-diameter-importance.trycloudflare.com/api"
 
 [[redirects]]
   from = "/*"

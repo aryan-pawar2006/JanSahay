@@ -7,6 +7,8 @@ echo   Backend:  Java 17 + Spring Boot 3 + MySQL 8 (Port 8080)
 echo   Frontend: React 18 + Vite (Port 5173)
 echo ========================================================
 
+if not defined DB_PASSWORD set DB_PASSWORD=Aryan#123RN
+
 echo [1/2] Starting Java Spring Boot Backend Server...
 start "JanSahay 2.0 - Java Backend (Port 8080)" cmd /k "cd server && java -jar target\jansahay-backend-1.0.0.jar"
 

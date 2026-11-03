@@ -58,3 +58,10 @@ client/dist/
 target/
 server/target/
 *.log
+
+# Deploy state
+.netlify/
+client/.netlify/
+.vercel/
+client/.vercel/
+*.env.local

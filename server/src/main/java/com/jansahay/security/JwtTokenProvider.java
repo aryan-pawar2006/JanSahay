@@ -2,6 +2,7 @@ package com.jansahay.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,14 +14,26 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration:86400000}")
     private long jwtExpiration;
 
+    @PostConstruct
+    public void init() {
+        if (jwtSecret == null || jwtSecret.trim().length() < 32) {
+            log.warn("⚠️ JWT_SECRET environment variable is missing or shorter than 32 characters. Using internal fallback key for development.");
+        } else {
+            log.info("✓ JWT_SECRET configured from environment variable ({} chars).", jwtSecret.trim().length());
+        }
+    }
+
     private SecretKey getSigningKey() {
-        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        String secret = (jwtSecret != null && jwtSecret.trim().length() >= 32)
+                ? jwtSecret.trim()
+                : "JanSahayAI-Dev-Secret-Key-Minimum-32-Characters-Long!";
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
