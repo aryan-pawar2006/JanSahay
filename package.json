@@ -4,15 +4,9 @@
   "description": "JanSahay AI - Smart Document Guidance & Government Scheme Discovery for Indian Citizens",
   "type": "module",
   "scripts": {
-    "setup": "npm run install:server && npm run install:client",
-    "install:server": "cd server && npm install",
-    "install:client": "cd client && npm install",
-    "server": "cd server && npm start",
+    "server": "cd server && mvn spring-boot:run",
     "client": "cd client && npm run dev",
-    "dev": "node start-dev.js",
-    "start": "node start-dev.js"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "build": "cd client && npm run build",
+    "start": "cd server && java -jar target/jansahay-backend-1.0.0.jar"
   }
 }
