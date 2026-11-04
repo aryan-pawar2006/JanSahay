@@ -37,6 +37,20 @@ const getHostname = (urlStr) => {
   }
 };
 
+const ensureAbsoluteUrl = (urlStr) => {
+  if (!urlStr) return '#';
+  const clean = urlStr.trim();
+  return clean.startsWith('http://') || clean.startsWith('https://') ? clean : `https://${clean}`;
+};
+
+const handleOpenOfficial = (e, urlStr) => {
+  if (e && e.preventDefault) e.preventDefault();
+  const targetUrl = ensureAbsoluteUrl(urlStr);
+  if (targetUrl && targetUrl !== '#') {
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  }
+};
+
 export const SchemeDetailPage = () => {
   const { id } = useParams();
 
@@ -261,9 +275,10 @@ export const SchemeDetailPage = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-end', minWidth: '260px' }}>
               {scheme.sourceUrl && (
                 <a
-                  href={scheme.sourceUrl}
+                  href={ensureAbsoluteUrl(scheme.sourceUrl)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  onClick={(e) => handleOpenOfficial(e, scheme.sourceUrl)}
                   className="btn btn-primary"
                   style={{
                     background: '#15803d',
@@ -578,9 +593,10 @@ export const SchemeDetailPage = () => {
                                 </h4>
                                 {doc.officialPortalUrl && (
                                   <a
-                                    href={doc.officialPortalUrl}
+                                    href={ensureAbsoluteUrl(doc.officialPortalUrl)}
                                     target="_blank"
-                                    rel="noreferrer"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => handleOpenOfficial(e, doc.officialPortalUrl)}
                                     style={{
                                       fontSize: '0.8rem',
                                       color: '#1e40af',
@@ -665,9 +681,10 @@ export const SchemeDetailPage = () => {
 
               {scheme.sourceUrl && (
                 <a
-                  href={scheme.sourceUrl}
+                  href={ensureAbsoluteUrl(scheme.sourceUrl)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  onClick={(e) => handleOpenOfficial(e, scheme.sourceUrl)}
                   className="btn btn-primary"
                   style={{
                     background: '#15803d',
@@ -764,9 +781,10 @@ export const SchemeDetailPage = () => {
 
                 {scheme.sourceUrl && (
                   <a
-                    href={scheme.sourceUrl}
+                    href={ensureAbsoluteUrl(scheme.sourceUrl)}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    onClick={(e) => handleOpenOfficial(e, scheme.sourceUrl)}
                     className="btn btn-primary"
                     style={{
                       background: '#15803d',

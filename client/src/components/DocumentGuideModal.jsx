@@ -268,15 +268,19 @@ export const DocumentGuideModal = ({ guide, onClose, onStatusUpdated }) => {
               </div>
             </div>
             <a
-              href={officialPortalUrl}
+              href={officialPortalUrl.startsWith('http://') || officialPortalUrl.startsWith('https://') ? officialPortalUrl : `https://${officialPortalUrl}`}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                const target = officialPortalUrl.startsWith('http://') || officialPortalUrl.startsWith('https://') ? officialPortalUrl : `https://${officialPortalUrl}`;
+                window.open(target, '_blank', 'noopener,noreferrer');
+              }}
               className="btn"
               style={{
                 background: '#f97316', color: '#ffffff', border: 'none',
                 fontWeight: 800, fontSize: '0.85rem', padding: '0.6rem 1.25rem',
                 borderRadius: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                textDecoration: 'none'
+                textDecoration: 'none', cursor: 'pointer'
               }}>
               <span>Open Official Portal</span>
               <ExternalLink size={15} />

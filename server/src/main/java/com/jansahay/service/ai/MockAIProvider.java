@@ -27,6 +27,14 @@ public class MockAIProvider implements AIProvider {
         String applicationSteps = extractSection(systemPrompt, "applicationSteps:", "\n\n");
 
         // ══════════════════════════════════════════════════════════════════════════
+        // 0. CHECK EXTENSIVE ENCYCLOPEDIC KNOWLEDGE BASE FIRST
+        // ══════════════════════════════════════════════════════════════════════════
+        String kbAnswer = JanSahayKnowledgeBase.findAnswer(userMessage, isMarathi, isHindi);
+        if (kbAnswer != null && !kbAnswer.isBlank()) {
+            return kbAnswer;
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
         // 1. IN-HAND CITIZEN DOCUMENTS QUERIES
         // ══════════════════════════════════════════════════════════════════════════
         if (msg.contains("in hand") || msg.contains("have right now") || msg.contains("my document") ||

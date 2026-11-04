@@ -240,7 +240,15 @@ export const SchemesCatalogPage = () => {
                     </Link>
 
                     {s.sourceUrl && (
-                      <a href={s.sourceUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'none' }}>
+                      <a
+                        href={s.sourceUrl.startsWith('http://') || s.sourceUrl.startsWith('https://') ? s.sourceUrl : `https://${s.sourceUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          const target = s.sourceUrl.startsWith('http://') || s.sourceUrl.startsWith('https://') ? s.sourceUrl : `https://${s.sourceUrl}`;
+                          window.open(target, '_blank', 'noopener,noreferrer');
+                        }}
+                        style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'none', cursor: 'pointer' }}>
                         Official Portal <ExternalLink size={11} />
                       </a>
                     )}
