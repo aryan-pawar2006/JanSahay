@@ -13,6 +13,7 @@ import { LiveUpdatesPage } from './pages/LiveUpdatesPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { AIChatDrawer } from './components/AIChatDrawer';
 
 export const App = () => {
   return (
@@ -34,6 +35,8 @@ export const App = () => {
         </Routes>
       </main>
       <Footer />
+      {/* Global JanSahay AI Chatbot Drawer persistent across all pages */}
+      <AIChatDrawer />
     </div>
   );
 };

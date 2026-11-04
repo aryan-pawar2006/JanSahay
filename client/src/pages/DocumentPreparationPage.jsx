@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { documentService, documentGuideService } from '../services/api';
 import { DocumentGuideModal } from '../components/DocumentGuideModal';
-import { AIChatDrawer } from '../components/AIChatDrawer';
 import {
   CheckCircle,
   AlertTriangle,
@@ -330,9 +329,6 @@ export const DocumentPreparationPage = () => {
           onStatusUpdated={() => loadDashboard()}
         />
       )}
-
-      {/* AI Assistant */}
-      <AIChatDrawer />
     </div>
   );
 };

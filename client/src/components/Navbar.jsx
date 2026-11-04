@@ -98,6 +98,24 @@ export const Navbar = () => {
           <Link to="/updates" style={{ color: '#334155', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <Bell size={16} color="#e11d48" /> {t('updates')}
           </Link>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('jansahay-open-ai'))}
+            style={{
+              background: '#fff7ed',
+              border: '1px solid #fed7aa',
+              color: '#ea580c',
+              fontSize: '0.825rem',
+              fontWeight: 700,
+              padding: '0.3rem 0.65rem',
+              borderRadius: '9999px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              cursor: 'pointer'
+            }}
+            title="Open JanSahay AI Assistant">
+            <Sparkles size={14} color="#ea580c" /> AI Assistant
+          </button>
           {isAdmin && (
             <Link to="/admin" style={{ color: '#7c3aed', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#f5f3ff', padding: '0.25rem 0.5rem', borderRadius: '4px' }}>
               <Shield size={16} /> {t('admin')}

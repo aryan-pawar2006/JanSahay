@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { schemeService, documentService, documentGuideService } from '../services/api';
 import { DocumentGuideModal } from '../components/DocumentGuideModal';
-import { AIChatDrawer } from '../components/AIChatDrawer';
 import {
   CheckCircle,
   AlertTriangle,
@@ -798,9 +797,6 @@ export const SchemeDetailPage = () => {
           onStatusUpdated={() => loadSchemeDetails()}
         />
       )}
-
-      {/* Floating AI Assistant */}
-      <AIChatDrawer currentScheme={scheme} />
     </div>
   );
 };

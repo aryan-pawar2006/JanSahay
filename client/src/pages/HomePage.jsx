@@ -242,9 +242,11 @@ export const HomePage = () => {
               <p style={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.6, marginBottom: '1.25rem' }}>
                 Have questions in Marathi, Hindi, or English? The JanSahay AI Assistant explains complex conditions in simple everyday language using only verified database records — no hallucinations or fake criteria.
               </p>
-              <Link to="/recommendations" style={{ color: '#1e3a8a', fontWeight: 700, fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                Try AI Assistant in Action <ArrowRight size={14} />
-              </Link>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('jansahay-open-ai', { detail: { initialQuestion: 'What government schemes are available for students, farmers, and citizens?' } }))}
+                style={{ background: 'none', border: 'none', padding: 0, color: '#1e3a8a', fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                Open AI Assistant in Action <ArrowRight size={14} />
+              </button>
             </div>
 
             {/* Box 3: Cross-Scheme Preparation Dashboard */}
