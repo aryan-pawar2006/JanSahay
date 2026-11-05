@@ -625,6 +625,51 @@ public class JanSahayKnowledgeBase {
             "⚖️ **महाराष्ट्र लोक सेवा गारंटी अधिनियम 2015:**\n\n" +
             "• सरकारी अधिकारियों को निर्धारित 15 से 21 दिनों में प्रमाणपत्र देना अनिवार्य है। विलंब होने पर आप आपले सरकार पोर्टल पर सीधे प्रथम अपील (First Appeal) दर्ज कर सकते हैं।"
         ));
+
+        TOPICS.add(new Topic(
+            "caste-certificate-guide",
+            new String[]{"caste certificate", "caste validity", "barti", "ccvis", "जात प्रमाणपत्र", "जात पडताळणी", "जाति प्रमाण पत्र", "caste verification"},
+            "📜 **Caste Certificate & Caste Validity Verification Guide:**\n\n" +
+            "• **1. Caste Certificate (Revenue Dept):**\n" +
+            "  - Proves candidate belongs to SC, ST, VJNT, OBC, or SBC category.\n" +
+            "  - Requires pre-1967 (for SC/OBC) or pre-1950 (for SC) historical family records, father/grandfather's school leaving certificate with caste mentioned.\n" +
+            "• **2. Caste Validity Certificate (CCVIS / Barti / TRTI):**\n" +
+            "  - **Mandatory for:** Professional college admissions (CAP rounds for Engineering, MBBS), government job appointments, and elections.\n" +
+            "  - Apply online via CCVIS portal (https://ccvis.mahaonline.gov.in) with genealogical family tree (Vamshaval) and original revenue caste certificate.",
+            "📜 **जात प्रमाणपत्र व जात पडताळणी (Caste Validity):**\n\n" +
+            "• **१. जात दाखला:** उपविभागीय अधिकारी (SDO) यांच्याकडून मिळतो. यासाठी वडील किंवा आजोबांचा शाळा सोडल्याचा दाखला ज्यावर जात नोंद आहे तो लागतो.\n" +
+            "• **२. जात पडताळणी प्रमाणपत्र (Validity):** इंजिनिअरिंग, मेडिकल व सरकारी नोकरीसाठी अनिवार्य. बार्टी/CCVIS पोर्टलवर वंशावळ प्रतिज्ञापत्र जोडून अर्ज करावा लागतो.",
+            "📜 **जाति प्रमाण पत्र एवं जाति वैधता (Caste Validity):**\n\n" +
+            "• **महत्व:** उच्च शिक्षा व सरकारी नौकरियों में आरक्षण हेतु अनिवार्य। बार्टी पोर्टल पर वंशावली के साथ आवेदन करें।"
+        ));
+
+        TOPICS.add(new Topic(
+            "official-website-link",
+            new String[]{"official website", "go to official website", "website not opening", "apply link not responding", "website not responding", "अधिकृत वेबसाइट", "लिंक उघडत नाही", "वेबसाइट काम नहीं कर रही"},
+            "🌐 **Official Government Website Links & Direct Navigation:**\n\n" +
+            "• **How JanSahay Connects to Government Portals:**\n" +
+            "  When you click **'Apply Officially on Govt Portal'** or **'Go to Official Website'**, JanSahay opens the verified government departmental portal in a **new browser tab**.\n" +
+            "• **Direct Official Government URLs:**\n" +
+            "  - MahaDBT Portal: https://mahadbt.maharashtra.gov.in\n" +
+            "  - Aaple Sarkar Portal: https://aaplesarkar.mahaonline.gov.in\n" +
+            "  - PM-KISAN Portal: https://pmkisan.gov.in\n" +
+            "  - Mudra Loans: https://www.udyamimitra.in\n" +
+            "  - Ayushman Bharat: https://beneficiary.nha.gov.in\n" +
+            "  - PM Vishwakarma: https://pmvishwakarma.gov.in\n" +
+            "  - PM Surya Ghar: https://pmsuryaghar.gov.in\n" +
+            "  - Udyam MSME: https://udyamregistration.gov.in",
+            "🌐 **अधिकृत शासकीय वेबसाइट्स आणि थेट लिंक मार्गदर्शन:**\n\n" +
+            "• **थेट अधिकृत पोर्टल्स:**\n" +
+            "  - महाडीबीटी शिष्यवृत्ती: https://mahadbt.maharashtra.gov.in\n" +
+            "  - आपले सरकार: https://aaplesarkar.mahaonline.gov.in\n" +
+            "  - पीएम किसान: https://pmkisan.gov.in\n" +
+            "  - आयुष्मान भारत: https://beneficiary.nha.gov.in\n" +
+            "  - उद्यम नोंदणी: https://udyamregistration.gov.in",
+            "🌐 **आधिकारिक सरकारी वेबसाइट लिंक:**\n\n" +
+            "• महाडीबीटी: https://mahadbt.maharashtra.gov.in\n" +
+            "• पीएम किसान: https://pmkisan.gov.in\n" +
+            "• आयुष्मान भारत: https://beneficiary.nha.gov.in"
+        ));
     }
 
     public static String findAnswer(String userMessage, boolean isMarathi, boolean isHindi) {
